@@ -18,11 +18,8 @@ class PostsCollection(Resource):
         """
         return ""
 
-
     def post(self):
         """
         Creates a new Project.
         """
         return None, 201
-
-
