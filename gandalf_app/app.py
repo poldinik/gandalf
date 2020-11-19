@@ -3,8 +3,9 @@ import logging.config
 import os
 from flask import Flask, Blueprint
 from gandalf_app import settings
-#from gandalf_app.api.blog.endpoints.posts import ns as blog_posts_namespace
-#from gandalf_app.api.blog.endpoints.categories import ns as blog_categories_namespace
+from gandalf_app.api.project.endpoints.projects import ns as project_namespace
+# from gandalf_app.api.blog.endpoints.posts import ns as blog_posts_namespace
+# from gandalf_app.api.blog.endpoints.categories import ns as blog_categories_namespace
 from gandalf_app.api.restplus import api
 from gandalf_app.database import db
 
@@ -29,8 +30,9 @@ def initialize_app(flask_app):
 
     blueprint = Blueprint('api', __name__, url_prefix='/api')
     api.init_app(blueprint)
-    #api.add_namespace(blog_posts_namespace)
-    #api.add_namespace(blog_categories_namespace)
+    api.add_namespace(project_namespace)
+    # api.add_namespace(blog_posts_namespace)
+    # api.add_namespace(blog_categories_namespace)
     flask_app.register_blueprint(blueprint)
 
     db.init_app(flask_app)
