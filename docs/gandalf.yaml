@@ -1,0 +1,887 @@
+openapi: "3.0.3"
+
+info:
+    title: Gandalf
+    description: Multimedia analysis API
+    termsOfService: "https://lesc.dinfo.unifi.it/gandalf/terms/"
+    contact:
+        name: API Support
+        url: "https://lesc.dinfo.unifi.it/gandalf/support"
+        email: "alessandro.nozzoli@unifi.it"
+    license:
+        name: "Apache 2.0"
+        url: "https://www.apache.org/licenses/LICENSE-2.0.html"
+    version: "1.0"
+
+servers:
+    - url: "https://lesc.dinfo.unifi.it/gandalf/api/v1"
+      description: Development server
+
+security:
+    - JWT: []
+
+externalDocs:
+    description: Find more info here.
+    url: "https://lesc.dinfo.unifi.it/gandalf/"
+
+paths:
+    # JSON Web Tokens
+    "/token/":
+        summary: Authenticate the user.
+        post:
+            tags: ["JSON Web Tokens"]
+            summary: Obtain a JWT for the user.
+            operationId: login
+            requestBody:
+                description: The user credentials.
+                required: true
+                content:
+                    "application/json":
+                        schema:
+                            $ref: "#/components/schemas/Authentication"
+                    "application/x-www-form-urlencoded":
+                        schema:
+                            $ref: "#/components/schemas/Authentication"
+            security: []
+            responses:
+                "200":
+                    description: "OK: the authentication has been accepted."
+                    content:
+                        "application/json":
+                            schema:
+                                type: object
+                                properties:
+                                    access:
+                                        description: The authentication token.
+                                        type: string
+                                    refresh:
+                                        description: The refresh token.
+                                        type: string
+                                example:
+                                    access: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c"
+                                    refresh: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c"
+                "401":
+                    description: "Unauthorized: the authentication has been refused."
+                    headers:
+                        WWW-Authenticate:
+                            description: The requested authentication type.
+                            schema:
+                                type: string
+                                enum: ["Bearer realm='api'"]
+                    content:
+                        "application/json":
+                            schema:
+                                type: object
+                                properties:
+                                    detail:
+                                        description: The reason for refusing access.
+                                        type: string
+                            example:
+                                detail: No active account found with the given credentials
+                "500":
+                    "$ref": "#/components/responses/UnexpectedError"
+
+    "/token/refresh":
+        summary: Authenticate the user.
+        post:
+            tags: ["JSON Web Tokens"]
+            summary: Obtain a JWT for the user.
+            operationId: refreshLogin
+            requestBody:
+                description: The user credentials.
+                required: true
+                content:
+                    "application/json":
+                        schema:
+                            $ref: "#/components/schemas/AuthenticationRefresh"
+                    "application/x-www-form-urlencoded":
+                        schema:
+                            $ref: "#/components/schemas/AuthenticationRefresh"
+            security: []
+            responses:
+                "200":
+                    description: "OK: the authentication has been accepted."
+                    content:
+                        "application/json":
+                            schema:
+                                type: object
+                                properties:
+                                    access:
+                                        description: The authentication token.
+                                        type: string
+                                example:
+                                    access: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c"
+                "401":
+                    description: "Unauthorized: the authentication has been refused."
+                    headers:
+                        WWW-Authenticate:
+                            description: The requested authentication type.
+                            schema:
+                                type: string
+                                enum: ["Bearer realm='api'"]
+                    content:
+                        "application/json":
+                            schema:
+                                type: object
+                                properties:
+                                    detail:
+                                        description: The reason for refusing access.
+                                        type: string
+                                    code:
+                                        description: The error code.
+                                        type: string
+                            example:
+                                detail: Token is invalid or expired
+                                code: token_not_valid
+                "500":
+                    $ref: "#/components/responses/UnexpectedError"
+
+    # Project management
+
+    "/projects/":
+        summary: Uploaded projects list.
+        get:
+            tags: ["Project management"]
+            summary: Obtain the list of available projects.
+            operationId: getProjectsList
+            responses:
+                "200":
+                    description: "OK: a list of available projects."
+                    content:
+                        "application/json":
+                            schema:
+                                type: array
+                                items:
+                                    $ref: "#/components/schemas/ProjectStatus"
+                "401":
+                    $ref: "#/components/responses/Unauthorized"
+                "500":
+                    $ref: "#/components/responses/UnexpectedError"
+        post:
+            tags: ["Project management"]
+            summary: Create a new project.
+            operationId: createProject
+            parameters:
+                - name: name
+                  description: The name of the project.
+                  in: query
+                  required: true
+                  schema:
+                      type: string
+            responses:
+                "201":
+                    description: "Created: the project has been created."
+                    headers:
+                        Location:
+                            description: The URI for the project details.
+                            schema:
+                                type: string
+                    content:
+                        "application/json":
+                            schema:
+                                $ref: "#/components/schemas/ProjectReceipt"
+                    links:
+                        analysisResults:
+                            description: Get project details.
+                            operationId: getProject
+                            parameters:
+                                projectId: "$response.id"
+                "401":
+                    $ref: "#/components/responses/Unauthorized"
+                "500":
+                    $ref: "#/components/responses/UnexpectedError"
+
+    "/projects/{projectId}":
+        summary: Information about a project.
+        parameters:
+            - name: projectId
+              description: The project ID as reported in the project creation receipt.
+              in: path
+              required: true
+              schema:
+                  type: integer
+        get:
+            tags: ["Project management"]
+            summary: Obtain project status.
+            operationId: getProject
+            responses:
+                "200":
+                    description: "OK: the requested project information."
+                    content:
+                        "application/json":
+                            schema:
+                                $ref: "#/components/schemas/ProjectDetails"
+                "404":
+                    description: "Not Found: the requested project has not been found."
+                "401":
+                    $ref: "#/components/responses/Unauthorized"
+                "500":
+                    $ref: "#/components/responses/UnexpectedError"
+        delete:
+            tags: ["Project management"]
+            summary: Delete a project.
+            operationId: deleteProject
+            responses:
+                "204":
+                    description: "No Content: the project has been successfully deleted."
+                "404":
+                    description: "Not Found: the requested project has not been found."
+                "401":
+                    $ref: "#/components/responses/Unauthorized"
+                "500":
+                    $ref: "#/components/responses/UnexpectedError"
+
+    "/projects/{projectId}/start":
+        parameters:
+            - name: projectId
+              description: The project ID as reported in the project creation receipt.
+              in: path
+              required: true
+              schema:
+                  type: integer
+            - name: tools
+              description: "A list of tool IDs to be run. Default: run all tools."
+              in: query
+              required: false
+              schema:
+                  type: array
+                  items:
+                      type: integer
+        post:
+            tags: ["Project management"]
+            summary: Start an analysis.
+            operationId: startProjectAnalysis
+            responses:
+                "202":
+                    description: "Accepted: the analysis request has been accepted."
+                "404":
+                    description: "Not Found: the requested project has not been found."
+                "401":
+                    $ref: "#/components/responses/Unauthorized"
+                "500":
+                    $ref: "#/components/responses/UnexpectedError"
+
+    "/projects/{projectId}/media/":
+        summary: Manage uploaded media files for a project.
+        parameters:
+            - name: projectId
+              description: The project ID as reported in the project creation receipt.
+              in: path
+              required: true
+              schema:
+                  type: integer
+        post:
+            tags: ["Media files management"]
+            summary: Upload a media file to a project.
+            operationId: uploadProjectMedia
+            parameters:
+                - name: name
+                  description: "An (optional) name for the uploaded file."
+                  in: query
+                  required: false
+                  schema:
+                      type: string
+                - name: role
+                  description: "The role of the uploaded file in the analysis."
+                  in: query
+                  required: true
+                  schema:
+                      type: string
+                      enum: [PROBE, REFERENCE]
+            requestBody:
+                description: The file to be uploaded.
+                content:
+                    "audio/*":
+                        schema:
+                            # a binary audio file
+                            type: string
+                            format: binary
+                    "image/*":
+                        schema:
+                            # a binary image file
+                            type: string
+                            format: binary
+                    "video/*":
+                        schema:
+                            # a binary video file
+                            type: string
+                            format: binary
+                required: true
+            responses:
+                "201":
+                    description: "Created: the media file has been successfully uploaded."
+                    headers:
+                        Location:
+                            description: The URI for the media file.
+                            schema:
+                                type: string
+                    content:
+                        "application/json":
+                            schema:
+                                $ref: "#/components/schemas/MediaReceipt"
+                    links:
+                        deleteMedia:
+                            description: Delete uploaded media file.
+                            operationId: deleteProjectMedia
+                            parameters:
+                                projectId: "$path.id"
+                                mediaId: "$response.id"
+                "401":
+                    $ref: "#/components/responses/Unauthorized"
+                "404":
+                    description: "Not Found: the requested project has not been found."
+                "500":
+                    $ref: "#/components/responses/UnexpectedError"
+
+    "/projects/{projectId}/media/{mediaId}":
+        parameters:
+            - name: projectId
+              description: The project ID as reported in the project creation receipt.
+              in: path
+              required: true
+              schema:
+                  type: integer
+            - name: mediaId
+              description: The file ID as reported in the media upload receipt.
+              in: path
+              required: true
+              schema:
+                  type: integer
+        delete:
+            tags: ["Media files management"]
+            summary: Delete a media file from a project.
+            operationId: deleteProjectMedia
+            responses:
+                "204":
+                    description: "No Content: the media file has been successfully deleted."
+                "404":
+                    description: "Not Found: the requested media file has not been found."
+                "401":
+                    $ref: "#/components/responses/Unauthorized"
+                "500":
+                    $ref: "#/components/responses/UnexpectedError"
+
+    # Data files management
+
+    "/projects/{projectId}/data/":
+        summary: Manage uploaded data files for a project.
+        parameters:
+            - name: projectId
+              description: The project ID as reported in the project creation receipt.
+              in: path
+              required: true
+              schema:
+                  type: integer
+        post:
+            tags: ["Data files management"]
+            summary: Upload a data file to a project.
+            operationId: uploadProjectData
+            parameters:
+                - name: name
+                  description: "An (optional) name for the uploaded file."
+                  in: query
+                  required: false
+                  schema:
+                      type: string
+                - name: dataType
+                  description: "The kind of data contained in the uploaded file."
+                  in: query
+                  required: true
+                  schema:
+                      type: string
+            requestBody:
+                description: The file to be uploaded.
+                content:
+                    "*/*":
+                        schema:
+                            # a binary audio file
+                            type: string
+                            format: binary
+                required: true
+            responses:
+                "201":
+                    description: "Created: the data file has been successfully uploaded."
+                    headers:
+                        Location:
+                            description: The URI for the media file.
+                            schema:
+                                type: string
+                    content:
+                        "application/json":
+                            schema:
+                                $ref: "#/components/schemas/DataReceipt"
+                    links:
+                        deleteMedia:
+                            description: Delete uploaded data file.
+                            operationId: deleteProjectData
+                            parameters:
+                                projectId: "$path.id"
+                                dataId: "$response.id"
+                "401":
+                    $ref: "#/components/responses/Unauthorized"
+                "404":
+                    description: "Not Found: the requested project has not been found."
+                "500":
+                    $ref: "#/components/responses/UnexpectedError"
+
+    "/projects/{projectId}/data/{dataId}":
+        parameters:
+            - name: projectId
+              description: The project ID as reported in the project creation receipt.
+              in: path
+              required: true
+              schema:
+                  type: integer
+            - name: dataId
+              description: The file ID as reported in the data upload receipt.
+              in: path
+              required: true
+              schema:
+                  type: integer
+        delete:
+            tags: ["Data files management"]
+            summary: Delete a data file from a project.
+            operationId: deleteProjectData
+            responses:
+                "204":
+                    description: "No Content: the media file has been successfully deleted."
+                "404":
+                    description: "Not Found: the requested media file has not been found."
+                "401":
+                    $ref: "#/components/responses/Unauthorized"
+                "500":
+                    $ref: "#/components/responses/UnexpectedError"
+
+    # Results inspection
+
+    "/projects/{projectId}/results/{resultId}":
+        parameters:
+            - name: projectId
+              description: The project ID as reported in the project creation receipt.
+              in: path
+              required: true
+              schema:
+                  type: integer
+            - name: resultId
+              description: The result ID.
+              in: path
+              required: true
+              schema:
+                  type: integer
+        get:
+            tags: ["Results inspection"]
+            summary: Obtain a result's data.
+            operationId: getProjectResult
+            responses:
+                "200":
+                    description: "OK: the chosen result has been found."
+                    headers:
+                        ETag:
+                            description: An hash of the specific version of this result.
+                            schema:
+                                type: string
+                        Last-Modified:
+                            description: The last modification timestamp for this result.
+                            schema:
+                                type: string
+                    content:
+                        "application/json":
+                            schema:
+                                $ref: "#/components/schemas/ResultDetails"
+                "404":
+                    description: "Not Found: the requested media file has not been found."
+                "401":
+                    $ref: "#/components/responses/Unauthorized"
+                "500":
+                    $ref: "#/components/responses/UnexpectedError"
+
+    "/tools/":
+        summary: Available tools.
+        get:
+            tags: ["Introspection"]
+            summary: List of available tools.
+            operationId: getToolsList
+            responses:
+                "200":
+                    description: "OK: the tools list has been generated."
+                    content:
+                        "application/json":
+                            schema:
+                                type: array
+                                items:
+                                    $ref: "#/components/schemas/ToolDetail"
+                "401":
+                    $ref: "#/components/responses/Unauthorized"
+                "500":
+                    $ref: "#/components/responses/UnexpectedError"
+
+components:
+    schemas:
+        # JSON Web Tokens
+
+        Authentication:
+            type: object
+            properties:
+                username:
+                    description: "The user's name."
+                    type: string
+                password:
+                    description: "The user's password."
+                    type: string
+                    format: password
+            required:
+                - username
+                - password
+            example:
+                username: foo
+                password: bar
+
+        AuthenticationRefresh:
+            type: object
+            properties:
+                refresh:
+                    description: The refresh token.
+                    type: string
+            required:
+                - refresh
+            example:
+                refresh: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c"
+
+        # Project management
+
+        ProjectStatus:
+            description: The status of a project analysis.
+            type: object
+            properties:
+                id:
+                    description: A unique identifier for the project analysis request.
+                    type: integer
+                location:
+                    description: The URI for the project details.
+                    type: string
+                status:
+                    description: >
+                        The status of the project.
+                        DRAFT = The project is in draft mode, media files can be added/removed and no processing is being performed.
+                        PENDING = The request is still being processed, no result is available.
+                        PARTIAL = The request is still being processed, some results are available.
+                        COMPLETED = The request has been processed and the results are available.
+                        ERROR = An error occurred during the analysis.
+                    type: string
+                    enum: [DRAFT, PENDING, PARTIAL, COMPLETED, ERROR]
+                name:
+                    description: The project name.
+                    type: string
+            example:
+                id: 123
+                location: "https://lesc.dinfo.unifi.it/gandalf/api/v1/projects/123"
+                status: COMPLETED
+                name: Test Project
+
+        ProjectReceipt:
+            description: The project creation receipt
+            type: object
+            properties:
+                id:
+                    description: A unique identifier for the project.
+                    type: integer
+                location:
+                    description: The URI for the project details.
+                    type: string
+                name:
+                    description: The project name.
+                    type: string
+            example:
+                id: 123
+                location: "https://lesc.dinfo.unifi.it/gandalf/api/v1/projects/123"
+                name: Test Project
+
+        ProjectDetails:
+            description: Details regarding a project.
+            type: object
+            properties:
+                id:
+                    description: A unique identifier for the project.
+                    type: integer
+                status:
+                    description: >
+                        The status of the project.
+                        DRAFT = The project is in draft mode, media files can be added/removed and no processing is being performed.
+                        PENDING = The request is still being processed, no result is available.
+                        PARTIAL = The request is still being processed, some results are available.
+                        COMPLETED = The request has been processed and the results are available.
+                        ERROR = An error occurred during the analysis.
+                    type: string
+                    enum: [DRAFT, PENDING, PARTIAL, COMPLETED, ERROR]
+                name:
+                    description: The project name.
+                    type: string
+                probes:
+                    description: A set of media files to be analysed.
+                    type: array
+                    items:
+                        $ref: "#/components/schemas/UploadedMediaFile"
+                references:
+                    description: A set of media files to use as references.
+                    type: array
+                    items:
+                        $ref: "#/components/schemas/UploadedMediaFile"
+                additionalData:
+                    description: A set of additional contents useful to the available toolset.
+                    type: array
+                    items:
+                        $ref: "#/components/schemas/UploadedDataFile"
+                results:
+                    description: The set of tool results.
+                    type: array
+                    items:
+                        $ref: "#/components/schemas/ResultSummary"
+            example:
+                id: 123
+                status: COMPLETED
+                name: Test Project
+                probes:
+                    - id: 400
+                      fileName: "test.mp4"
+                      hash: "74a4297365735b6c107b85e034347ce013eeae01"
+                      thumbnailLocation: null
+                    - id: 450
+                      fileName: "test2.mp4"
+                      hash: "19cfa134365735b6c107b85e03437ceae01352aa"
+                      thumbnailLocation: null
+                references:
+                    - id: 500
+                      fileName: "test.mov"
+                      hash: "2fa4231a009e148288114ea5dafc149fbc107b85"
+                      thumbnailLocation: null
+                additionalData:
+                    - id: 600
+                      fileName: "prnu.dat"
+                      hash: "09e148281a009e14149fbc107b855735b6c107b8"
+                results:
+                    - id: 700
+                      location: "https://lesc.dinfo.unifi.it/gandalf/api/v1/projects/123/results/700"
+                      probes: [400]
+                      toolId: 1000
+                      name: Gray map
+                      resultType: SINGLE
+                    - id: 800
+                      location: "https://lesc.dinfo.unifi.it/gandalf/api/v1/projects/123/results/800"
+                      probes: [450]
+                      toolId: 2000
+                      name: Image clustering
+                      resultType: MULTI
+                    - id: 900
+                      location: "https://lesc.dinfo.unifi.it/gandalf/api/v1/projects/123/results/900"
+                      probes: [400, 450]
+                      toolId: 2000
+                      name: Video clustering
+                      resultType: MULTI
+
+        # Media files management
+
+        MediaReceipt:
+            description: The media upload receipt
+            type: object
+            properties:
+                id:
+                    description: A unique identifier for the media file.
+                    type: integer
+                location:
+                    description: The URI for the media file.
+                    type: string
+                fileName:
+                    description: The media file name.
+                    type: string
+            example:
+                id: 123
+                location: "https://lesc.dinfo.unifi.it/gandalf/api/v1/projects/123/media/456"
+                fileName: Test Media File
+
+        DataReceipt:
+            description: The data upload receipt
+            type: object
+            properties:
+                id:
+                    description: A unique identifier for the data file.
+                    type: integer
+                location:
+                    description: The URI for the data file.
+                    type: string
+                fileName:
+                    description: The media file name.
+                    type: string
+            example:
+                id: 123
+                location: "https://lesc.dinfo.unifi.it/gandalf/api/v1/projects/123/data/456"
+                fileName: Test Data File
+
+        UploadedFile:
+            description: Generic uploaded file.
+            type: object
+            properties:
+                id:
+                    description: A unique identifier for the file.
+                    type: integer
+                fileName:
+                    description: The name of the orginal file.
+                    type: string
+                hash:
+                    description: The hash of the file contents.
+                    type: string
+
+        UploadedMediaFile:
+            description: Uploaded media file.
+            allOf:
+                - $ref: "#/components/schemas/UploadedFile"
+                - type: object
+                  properties:
+                      thumbnailLocation:
+                          description: The URI for the file thumbnail.
+                          type: string
+                          nullable: true
+
+        UploadedDataFile:
+            description: Uploaded data file.
+            allOf:
+                - $ref: "#/components/schemas/UploadedFile"
+                - type: object
+                  properties:
+                      dataType:
+                          description: "The type of data. Some examples are PRNU or QT-tables."
+                          type: string
+
+        # Results inspection
+
+        ResultSummary:
+            description: Summary of a result.
+            type: object
+            properties:
+                id:
+                    description: A unique identifier for the current result.
+                    type: integer
+                location:
+                    description: The URI for the result details.
+                    type: string
+                probes:
+                    description: IDs of probes that have been used to provide the result.
+                    type: array
+                    items:
+                        type: integer
+                toolId:
+                    description: A unique identifier for the used tool.
+                    type: integer
+                name:
+                    description: A description of this result (e.g. "Gray map", "Color map", ...).
+                    type: string
+                resultType:
+                    description: Type of result produced by the used tool.
+                    type: string
+                    enum: [SINGLE, MULTI]
+            example:
+              id: 120
+              location: "https://lesc.dinfo.unifi.it/gandalf/api/v1/projects/123/results/120"
+              probes: [400, 401, 402, 405]
+              toolId: 1000
+              name: "Gray map"
+              resultType: SINGLE
+
+        ResultDetails:
+            description: Details of a given result.
+            allOf:
+                - $ref: "#/components/schemas/ResultSummary"
+                - type: object
+                  properties:
+                      dataType:
+                          description: An identifier for the data format of the result (e.g. map, score, ...).
+                          type: string
+                      data:
+                          description: The resulting data.
+                          type: object
+                  example:
+                    dataType: map
+                    data: [[1, 0, 0],[0, 0, 0],[1, 0, 1]]
+
+
+        # Introspection
+
+        ToolDetail:
+            description: Details regarding one tool.
+            type: object
+            properties:
+                id:
+                    description: A unique identifier for the tool.
+                    type: integer
+                name:
+                    description: The common name used for the tool.
+                    type: string
+                description:
+                    description: The description of the tool characteristics and functioning.
+                    type: string
+                supportedDataTypes:
+                    description: A list of data types on which the tool can operate.
+                    type: array
+                    items:
+                        type: string
+                        enum: [IMAGE, VIDEO, AUDIO]
+                supportedDataFormats:
+                    description: A list of data formats on which the tool can operate.
+                    type: array
+                    items:
+                        type: string
+                references:
+                    description: A list of bibliographical references to papers describing the tool.
+                    type: array
+                    items:
+                        type: string
+            example:
+              id: 2000
+              name: ELA
+              description: It evaluates image level compression artifacts.
+              supportedDataTypes: IMAGE
+              supportedDataFormats: JPEG
+              references: ["Jeronymo, Daniel Cavalcanti, Yuri Cassio Campbell Borges, and Leandro dos Santos Coelho. Image forgery detection by semi-automatic wavelet soft-thresholding with error level analysis. Expert Systems with Applications 85 (2017): 348-356.", "Sudiatmika, Ida Bagus Kresna, and Fathur Rahman. Image forgery detection using error level analysis and deep learning. Telkomnika 17.2 (2019): 653-659."]
+
+
+    responses:
+        UnexpectedError:
+            description: "Internal Server Error: the server has encountered an unexpected error."
+            content:
+                "application/json":
+                    schema:
+                        type: "object"
+                        properties:
+                            reason:
+                                description: "A description of the error."
+                                type: "string"
+                    example:
+                        reason: "Backend is not responding."
+        Unauthorized:
+            description: "Unauthorized: the user is not authorized to perform this operation."
+            headers:
+                WWW-Authenticate:
+                    description: "The requested authentication type."
+                    schema:
+                        type: "string"
+                        enum: ["Bearer"]
+            content:
+                "application/json":
+                    schema:
+                        type: "object"
+                        properties:
+                            authEndpoint:
+                                description: "The authentication URI."
+                                type: "string"
+                            reason:
+                                description: "The reason for refusing access."
+                                type: "string"
+                    example:
+                        authEndpoint: "https://lesc.dinfo.unifi.it/gandalf/api/v1/login"
+                        reason: "No token has been sent."
+
+    securitySchemes: # Auth
+        JWT:
+            type: "http"
+            description: "JWT authentication via HTTP(S)."
+            scheme: "bearer"
+            bearerFormat: "JWT"

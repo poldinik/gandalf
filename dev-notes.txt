@@ -1,0 +1,1 @@
+cache su endpoint che dovrebbero elaborare e trasmettere molte immagini (usare last modified)
