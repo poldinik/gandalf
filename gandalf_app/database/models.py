@@ -3,12 +3,23 @@ from datetime import datetime
 from gandalf_app.database import db
 
 
+class ProjectStatus(enum.Enum):
+    DRAFT = 1
+    PENDING = 2
+    PARTIAL = 3
+    COMPLETED = 4
+    ERROR = 5
+
+
 class Project(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(50))
+    location = db.Column(db.String(50))
+    status = db.Column(db.Enum(ProjectStatus))  # enum list
 
     def __init__(self, name):
         self.name = name
+        self.status = ProjectStatus.DRAFT
 
     def __repr__(self):
         return '<Project %r>' % self.name

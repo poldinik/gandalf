@@ -34,7 +34,7 @@ un ORM (SQLAlchemy). Per lo sviluppo agile si è utilizzato un database di tipo 
 Installazione
 ----------
 
-Per installare le dipendenze necessarie per poter eseguire il progetto, tramite erminale spostarsi nella root directory del progetto ed eseguire:
+Per installare le dipendenze necessarie per poter eseguire il progetto, tramite terminale spostarsi nella root directory del progetto ed eseguire:
 
     sh install.sh
     
