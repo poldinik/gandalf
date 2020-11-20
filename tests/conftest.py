@@ -14,8 +14,8 @@ def client():
     GandalfApp.app.config['TESTING'] = True
 
     with GandalfApp.app.test_client() as client:
-        with GandalfApp.app.app_context():
-            GandalfDB.db.init_db()
+        # with GandalfApp.app.app_context():
+        #     GandalfDB.db.init_db()
         yield client
 
     os.close(db_fd)
