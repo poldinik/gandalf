@@ -7,6 +7,7 @@ def post_project(data):
     project = Project(name)
     db.session.add(project)
     db.session.commit()
+    return project
 
 
 def get_projects():

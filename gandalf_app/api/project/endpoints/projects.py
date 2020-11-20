@@ -2,7 +2,9 @@ import logging
 
 from flask import request
 from flask_restplus import Resource
+from gandalf_app.api.project.serializers import project, project_created_response
 from gandalf_app.api.restplus import api
+from gandalf_app.api.project.business import post_project
 
 log = logging.getLogger(__name__)
 
@@ -25,11 +27,14 @@ class ProjectsManagementResource(Resource):
         """
         return None, 200
 
+    @api.expect(project)
+    @api.marshal_with(project_created_response)
     def post(self):
         """
         Creates a new Project.
         """
-        return None, 201
+        created = post_project(request.json)
+        return created, 201
 
 
 @ns.route('/<int:projectId>')
