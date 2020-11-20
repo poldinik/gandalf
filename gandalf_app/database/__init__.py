@@ -4,6 +4,6 @@ db = SQLAlchemy()
 
 
 def reset_database():
-    # from gandalf_app.database.models import Post, Category  # noqa
+    import gandalf_app.database.models
     db.drop_all()
     db.create_all()

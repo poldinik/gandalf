@@ -1,5 +1,5 @@
 from datetime import datetime
-
+import enum
 from gandalf_app.database import db
 
 
