@@ -56,12 +56,12 @@ Lo script avvierà l'applicazione in modalità sviluppo, rendendola disponibile 
 Links
 -----
 
-* Website: https://palletsprojects.com/p/flask/
-* Documentation: https://flask.palletsprojects.com/
-* Releases: https://pypi.org/project/Flask/
+* Flask: https://palletsprojects.com/p/flask/
+* Flask-RestPlus: https://flask-restplus.readthedocs.io/en/stable/
 
 
 Author
 -----
 
 * Lorenzo Vannucchi
+
