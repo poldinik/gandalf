@@ -23,3 +23,15 @@ def delete_project():
 
 def start_analysis():
     pass
+
+
+def upload_media():
+    pass
+
+
+def upload_data():
+    pass
+
+
+def get_result():
+    pass
