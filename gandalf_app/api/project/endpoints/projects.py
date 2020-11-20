@@ -8,6 +8,13 @@ log = logging.getLogger(__name__)
 
 ns = api.namespace('projects', description='Operazioni legate ai Progetti')
 
+# parser = ns.parser()
+# parser.add_argument('Authorization',
+#                     type=str,
+#                     required=True,
+#                     location='headers',
+#                     help='Bearer Access Token')
+
 
 @ns.route('/')
 class ProjectsManagementResource(Resource):
