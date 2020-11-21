@@ -1,12 +1,11 @@
-from gandalf_app.database import db
 from gandalf_app.database.models import Project
+from gandalf_app.api.project.dao import save
 
 
 def post_project(data):
     name = data.get('name')
     project = Project(name)
-    db.session.add(project)
-    db.session.commit()
+    save(project)
     return project
 
 
