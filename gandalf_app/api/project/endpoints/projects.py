@@ -5,6 +5,7 @@ from flask_restplus import Resource
 from gandalf_app.api.project.serializers import project, project_created_response
 from gandalf_app.api.restplus import api
 from gandalf_app.api.project.business import post_project
+from gandalf_app.settings import MULTIMEDIA_DIRECTORY
 
 log = logging.getLogger(__name__)
 
@@ -70,6 +71,19 @@ class MediaFilesManagementResource(Resource):
         """
         Upload a Media File for a Project by id.
         """
+        if 'file' not in request.files:
+            flash('No file part')
+            # return redirect(request.url)
+        file = request.files['file']
+
+        if file.filename == '':
+            flash('No selected file')
+            # return redirect(request.url)
+        if file and allowed_file(file.filename):
+            filename = secure_filename(file.filename)
+            # salvo il mio file in locale
+            file.save(os.path.join(MULTIMEDIA_DIRECTORY, filename))
+            # return redirect(url_for('uploaded_file', filename=filename))
         return None, 200
 
 
