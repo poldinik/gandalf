@@ -1,6 +1,7 @@
 from datetime import datetime
 import enum
 from gandalf_app.database import db
+from gandalf_app import settings
 
 
 class ProjectStatus(enum.Enum):
@@ -12,10 +13,13 @@ class ProjectStatus(enum.Enum):
 
 
 class Project(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     name = db.Column(db.String(50))
     location = db.Column(db.String(50))
     status = db.Column(db.Enum(ProjectStatus))  # enum list
+    data = db.relationship('Data', backref='owner_project')
+    media = db.relationship('Media', backref='owner_project')
+    analysis = db.relationship('Analysis', backref='owner_project')
 
     def __init__(self, name):
         self.name = name
@@ -39,6 +43,7 @@ class Tool(db.Model):
 class Media(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(50))
+    project_id = db.Column(db.Integer, db.ForeignKey('project.id'))
 
     def __init__(self, name):
         self.name = name
@@ -50,6 +55,7 @@ class Media(db.Model):
 class Data(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(50))
+    project_id = db.Column(db.Integer, db.ForeignKey('project.id'))
 
     def __init__(self, name):
         self.name = name
@@ -61,6 +67,8 @@ class Data(db.Model):
 class Analysis(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(50))
+    project_id = db.Column(db.Integer, db.ForeignKey('project.id'))
+    result = db.relationship('Result', backref='owner_analysis')
 
     def __init__(self, name):
         self.name = name
@@ -72,6 +80,7 @@ class Analysis(db.Model):
 class Result(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(50))
+    analysis_id = db.Column(db.Integer, db.ForeignKey('analysis.id'))
 
     def __init__(self, name):
         self.name = name

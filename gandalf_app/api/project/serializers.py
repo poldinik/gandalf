@@ -7,4 +7,5 @@ project = api.model('Project', {
 
 project_created_response = api.model('Project', {
     'name': fields.String(required=True, description='Project name'),
+    'location': fields.String(required=True, description='Project location'),
 })

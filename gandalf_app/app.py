@@ -29,8 +29,7 @@ def configure_app(flask_app):
 
 def initialize_app(flask_app):
     configure_app(flask_app)
-
-    blueprint = Blueprint('api', __name__, url_prefix='/api')
+    blueprint = Blueprint('api', __name__, url_prefix='/api/v{}'.format(settings.API_VERSION))
     api.init_app(blueprint)
     api.add_namespace(token_namespace)
     api.add_namespace(project_namespace)
@@ -40,19 +39,15 @@ def initialize_app(flask_app):
     db.init_app(flask_app)
 
 
-    # reset_database()
-
-
 def main():
     initialize_app(app)
-    log.info('>>>>> Starting development server at http://{}/api/ <<<<<'.format(app.config['SERVER_NAME']))
+    log.info('>>>>> Starting development server at http://{}/api/v{}/ <<<<<'.format(app.config['SERVER_NAME'], settings.API_VERSION))
 
     with app.app_context():
         # Extensions like Flask-SQLAlchemy now know what the "current" app
         # is while within this block. Therefore, you can now run........
         reset_database()
     app.run(debug=settings.FLASK_DEBUG)
-
 
 
 if __name__ == "__main__":
