@@ -10,7 +10,7 @@ from gandalf_app import database as GandalfDB
 
 @pytest.fixture
 def client():
-    db_fd, GandalfApp.app.config['DATABASE'] = tempfile.mkstemp()
+    # db_fd, GandalfApp.app.config['DATABASE'] = tempfile.mkstemp()
     GandalfApp.app.config['TESTING'] = True
 
     with GandalfApp.app.test_client() as client:
@@ -18,6 +18,6 @@ def client():
         #     GandalfDB.db.init_db()
         yield client
 
-    os.close(db_fd)
-    os.unlink(GandalfApp.app.config['DATABASE'])
+    # os.close(db_fd)
+    # os.unlink(GandalfApp.app.config['DATABASE'])
 
