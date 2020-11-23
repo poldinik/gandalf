@@ -8,12 +8,20 @@ from gandalf_app.api.project.business import post_project, get_project, get_proj
 from gandalf_app.settings import MULTIMEDIA_DIRECTORY
 from flask import jsonify
 import os
+from werkzeug.utils import secure_filename
 
 logging_conf_path = os.path.normpath(os.path.join(os.path.dirname(__file__), '../../../../logging.conf'))
 logging.config.fileConfig(logging_conf_path)
 log = logging.getLogger(__name__)
 
 ns = api.namespace('projects', description='Operazioni legate ai Progetti')
+ALLOWED_EXTENSIONS = {'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'}
+
+
+def allowed_file(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
 
 # parser = ns.parser()
 # parser.add_argument('Authorization',
@@ -125,6 +133,7 @@ class SingleDataFilesManagementResource(Resource):
         """
         return None, 204
 
+
 @ns.route('/<int:projectId>/results/<int:resultId>')
 class ResultInspectionResource(Resource):
 
@@ -133,8 +142,3 @@ class ResultInspectionResource(Resource):
         Obtain a result data
         """
         return None, 200
-
-
-
-
-

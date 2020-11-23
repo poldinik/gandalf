@@ -13,7 +13,7 @@ SQLALCHEMY_DATABASE_URI = 'sqlite:///db.sqlite'
 SQLALCHEMY_TRACK_MODIFICATIONS = False
 
 # DIRECTORY per Multimedia caricati
-MULTIMEDIA_DIRECTORY = '/'
+MULTIMEDIA_DIRECTORY = '/Users/loretto/PycharmProjects/gandalf'
 
 # API version
 API_VERSION = 1
