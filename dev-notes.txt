@@ -1,1 +1,6 @@
 cache su endpoint che dovrebbero elaborare e trasmettere molte immagini (usare last modified)
+
+
+git reset --hard 8abadcd49ba2d259578207de6d37ffc6334dbe98 && git push --force
+
+git push origin develop --force

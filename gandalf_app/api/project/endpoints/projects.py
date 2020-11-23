@@ -4,7 +4,7 @@ from flask import request
 from flask_restplus import Resource
 from gandalf_app.api.project.serializers import project, project_created_response
 from gandalf_app.api.restplus import api
-from gandalf_app.api.project.business import post_project
+from gandalf_app.api.project.business import post_project, get_project
 from gandalf_app.settings import MULTIMEDIA_DIRECTORY
 
 log = logging.getLogger(__name__)
@@ -41,11 +41,13 @@ class ProjectsManagementResource(Resource):
 @ns.route('/<int:projectId>')
 class SingleProjectManagementResource(Resource):
 
+    @api.marshal_with(project_created_response)
     def get(self, projectId):
         """
         Returns a Project by id.
         """
-        return None, 200
+
+        return get_project(projectId), 200
 
     def delete(self, id):
         """

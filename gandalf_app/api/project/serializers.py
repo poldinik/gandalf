@@ -6,6 +6,7 @@ project = api.model('Project', {
 })
 
 project_created_response = api.model('Project', {
+    'id': fields.Integer(required=True, description='Project Id'),
     'name': fields.String(required=True, description='Project name'),
     'location': fields.String(required=True, description='Project location'),
 })
