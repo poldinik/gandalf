@@ -80,13 +80,7 @@
         height: 100vh;
         background: rgba(66, 50, 98, 0.05);
       }
-      .container {
-        padding: 25px;
-        box-shadow: 0 0 20px rgba(66, 50, 98, 0.35);
-        border: 1px solid #eaeaea;
-        border-radius: 3px;
-        background: white;
-      }
+
       @-moz-document url-prefix() {
         .fileUploadInput button{
           display: none
