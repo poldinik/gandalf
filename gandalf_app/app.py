@@ -10,6 +10,7 @@ from gandalf_app.api.user.endpoints.tokens import ns as token_namespace
 from gandalf_app.api.restplus import api
 from gandalf_app.database import db
 from gandalf_app.database import reset_database
+from gandalf_app.home.home import home_bp
 
 app = Flask(__name__)
 logging_conf_path = os.path.normpath(os.path.join(os.path.dirname(__file__), '../logging.conf'))
@@ -36,6 +37,7 @@ def initialize_app(flask_app):
     api.add_namespace(user_namespace)
     api.add_namespace(tool_namespace)
     flask_app.register_blueprint(blueprint)
+    flask_app.register_blueprint(home_bp)
     db.init_app(flask_app)
 
 
