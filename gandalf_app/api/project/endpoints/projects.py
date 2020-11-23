@@ -1,12 +1,16 @@
-import logging
+import logging.config
 
 from flask import request
 from flask_restplus import Resource
 from gandalf_app.api.project.serializers import project, project_created_response
 from gandalf_app.api.restplus import api
-from gandalf_app.api.project.business import post_project, get_project
+from gandalf_app.api.project.business import post_project, get_project, get_projects
 from gandalf_app.settings import MULTIMEDIA_DIRECTORY
+from flask import jsonify
+import os
 
+logging_conf_path = os.path.normpath(os.path.join(os.path.dirname(__file__), '../../../../logging.conf'))
+logging.config.fileConfig(logging_conf_path)
 log = logging.getLogger(__name__)
 
 ns = api.namespace('projects', description='Operazioni legate ai Progetti')
@@ -22,11 +26,14 @@ ns = api.namespace('projects', description='Operazioni legate ai Progetti')
 @ns.route('/')
 class ProjectsManagementResource(Resource):
 
+    @api.marshal_with(project_created_response)
     def get(self):
         """
         Returns list of Projects.
         """
-        return None, 200
+        projects = get_projects()
+        print("progetti recuperati: " + str(len(list(projects))))
+        return projects, 200
 
     @api.expect(project)
     @api.marshal_with(project_created_response)

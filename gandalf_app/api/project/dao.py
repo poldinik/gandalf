@@ -12,7 +12,7 @@ def save(project):
 
 
 def get_all():
-    pass
+    return Project.query.all()
 
 
 def get_by_id(projectId):
