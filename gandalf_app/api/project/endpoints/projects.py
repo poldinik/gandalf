@@ -101,7 +101,7 @@ class MediaFilesManagementResource(Resource):
             # salvo il mio file in locale
             file.save(os.path.join(MULTIMEDIA_DIRECTORY, filename))
             # return redirect(url_for('uploaded_file', filename=filename))
-        return None, 200
+        return "ok!", 200
 
 
 @ns.route('/<int:projectId>/media/<int:mediaId>')

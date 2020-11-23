@@ -13,3 +13,6 @@ home_bp = Blueprint(
 def home():
     """Homepage."""
     return render_template('index.html')
+
+
+
