@@ -24,6 +24,9 @@ class Project(db.Model):
     def __init__(self, name):
         self.name = name
         self.status = ProjectStatus.DRAFT
+        self.media = []
+        self.data = []
+        self.analysis = []
 
     def __repr__(self):
         return '<Project %r>' % self.name

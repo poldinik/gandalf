@@ -4,7 +4,7 @@ from flask import request
 from flask_restplus import Resource
 from gandalf_app.api.project.serializers import project, project_created_response
 from gandalf_app.api.restplus import api
-from gandalf_app.api.project.business import post_project, get_project, get_projects
+from gandalf_app.api.project.business import post_project, get_project, get_projects, add_data_to_project
 from gandalf_app.settings import MULTIMEDIA_DIRECTORY
 from flask import jsonify
 import os
@@ -84,6 +84,7 @@ class AnalysisStartForProjectResource(Resource):
 @ns.route('/<int:projectId>/media')
 class MediaFilesManagementResource(Resource):
 
+    @api.marshal_with(project_created_response)
     def post(self, projectId):
         """
         Upload a Media File for a Project by id.
@@ -100,8 +101,11 @@ class MediaFilesManagementResource(Resource):
             filename = secure_filename(file.filename)
             # salvo il mio file in locale
             file.save(os.path.join(MULTIMEDIA_DIRECTORY, filename))
+
+            return add_data_to_project(projectId, os.path.join(MULTIMEDIA_DIRECTORY, filename))
+
             # return redirect(url_for('uploaded_file', filename=filename))
-        return "ok!", 200
+        # return "ok!", 200
 
 
 @ns.route('/<int:projectId>/media/<int:mediaId>')
