@@ -8,6 +8,6 @@ log = logging.getLogger(__name__)
 
 def test_example(client):
     """Start with a blank database."""
-    rv = client.get('localhost:8888/api/v1/')
-    log.info(str(rv))
-    assert True
+    response = client.get('/')
+    log.info(str(response))
+    assert response.status_code == 200
