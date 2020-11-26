@@ -17,8 +17,8 @@ from gandalf_app import database as GandalfDB
 #         #     GandalfDB.db.init_db()
 #     return client
 
-    # os.close(db_fd)
-    # os.unlink(GandalfApp.app.config['DATABASE'])
+# os.close(db_fd)
+# os.unlink(GandalfApp.app.config['DATABASE'])
 
 @pytest.fixture
 def app():
@@ -26,5 +26,8 @@ def app():
     initialize_app(app)
     app.config['TESTING'] = True
     return app
+
+# link utile per esempio testing
+# https://nikgrozev.com/2018/10/12/python-api-with-flask-and-flask-restplus/
 
 # tramite pytest-flask si crea automaticamente un cliente (teoricamente)
