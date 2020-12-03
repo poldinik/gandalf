@@ -7,7 +7,7 @@ from gandalf_app.api.project.endpoints.projects import ns as project_namespace
 from gandalf_app.api.user.endpoints.users import ns as user_namespace
 from gandalf_app.api.tool.endpoints.tools import ns as tool_namespace
 from gandalf_app.api.user.endpoints.tokens import ns as token_namespace
-# from gandalf_app.api.auth.endpoints.endpoints import ns as auth_namespace
+from gandalf_app.api.auth.endpoints.auth import ns as auth_namespace
 from gandalf_app.api.restplus import api
 from gandalf_app.database import db
 from gandalf_app.database import reset_database
@@ -17,6 +17,7 @@ app = Flask(__name__)
 logging_conf_path = os.path.normpath(os.path.join(os.path.dirname(__file__), '../logging.conf'))
 logging.config.fileConfig(logging_conf_path)
 log = logging.getLogger(__name__)
+
 blueprint = Blueprint('api', __name__, url_prefix='/api/v{}'.format(settings.API_VERSION))
 
 

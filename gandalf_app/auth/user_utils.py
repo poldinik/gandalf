@@ -1,16 +1,15 @@
-import datetime
 import uuid
 from flask import url_for
 from gandalf_app.database import db
 from gandalf_app.database.models import User
-from gandalf_app.api.errors import CustomFlaskErr as notice
+from gandalf_app.errors import CustomFlaskErr as notice
 from validate_email import validate_email
 
 
 def save_new_user(data):
     user = User.query.filter_by(email=data['email']).first()
     print(data['username'])
-    # validate_email: 用于检测邮箱是否正确，并且真实可用
+
     if not validate_email(data['email'], verify=True, check_mx=True):
         raise notice(status_code=500, return_code=20006, action_status=False)
 
