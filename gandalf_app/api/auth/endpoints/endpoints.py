@@ -6,19 +6,15 @@ from gandalf_app.database import db
 from gandalf_app.auth.jwt_auth import auth
 from gandalf_app.database.models import User
 from gandalf_app.auth.jwt_auth import refresh_jwt
-from .serial import register_model, login_model, refresh_token_model, logout_model, rest_password_model
+from gandalf_app.api.auth.serial import register_model, login_model, refresh_token_model, logout_model, rest_password_model
 from gandalf_app.auth.user_utils import save_new_user
 from gandalf_app.auth.auth_utils import Auth
 from gandalf_app.api.errors import CustomFlaskErr as notice
 
-ns = Namespace('auth')
+ns = api.namespace('auth', description='Operazioni legate all\'autenticazione')
+# parser = ns.parser()
 
-parser = ns.parser()
-parser.add_argument('Authorization',
-                    type=str,
-                    required=True,
-                    location='headers',
-                    help='Bearer Access Token')
+# parser.add_argument('Authorization',type=str,required=True,location='headers',help='Bearer Access Token')
 
 
 ######  API
