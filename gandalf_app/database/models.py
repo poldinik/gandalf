@@ -7,6 +7,7 @@ from gandalf_app.auth.jwt_auth import jwt, auth, confirm_email_jwt
 from datetime import datetime
 from flask import g, request, jsonify
 import hashlib
+import logging
 
 class ProjectStatus(enum.Enum):
     DRAFT = 1

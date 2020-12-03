@@ -9,6 +9,7 @@ from gandalf_app.settings import MULTIMEDIA_DIRECTORY
 from flask import jsonify
 import os
 from werkzeug.utils import secure_filename
+from gandalf_app.auth.jwt_auth import auth
 
 logging_conf_path = os.path.normpath(os.path.join(os.path.dirname(__file__), '../../../../logging.conf'))
 logging.config.fileConfig(logging_conf_path)
@@ -34,6 +35,7 @@ def allowed_file(filename):
 @ns.route('/')
 class ProjectsManagementResource(Resource):
 
+    @auth.login_required
     @api.marshal_with(project_created_response)
     def get(self):
         """
