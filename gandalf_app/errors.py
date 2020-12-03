@@ -1,5 +1,5 @@
 from flask import make_response, jsonify
-from gandalf_app.app import blueprint
+#from gandalf_app.app import blueprint
 from gandalf_app.auth.jwt_auth import auth
 
 SERVER_ERROR_500 = ({"message": "An error occured."}, 500)
@@ -47,9 +47,9 @@ class CustomFlaskErr(Exception):
         return rv
 
 
-@blueprint.app_errorhandler(CustomFlaskErr)
-def handle_flask_error(error):
-    response = jsonify(error.to_dict())
-    response.status_code = error.status_code
-    print(response)
-    return response
+# @blueprint.app_errorhandler(CustomFlaskErr)
+# def handle_flask_error(error):
+#     response = jsonify(error.to_dict())
+#     response.status_code = error.status_code
+#     print(response)
+#     return response
