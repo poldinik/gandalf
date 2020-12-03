@@ -12,6 +12,8 @@ from gandalf_app.api.restplus import api
 from gandalf_app.database import db
 from gandalf_app.database import reset_database
 from gandalf_app.views.home import home_bp
+from flask import make_response, jsonify
+from gandalf_app.errors import CustomFlaskErr
 
 app = Flask(__name__)
 logging_conf_path = os.path.normpath(os.path.join(os.path.dirname(__file__), '../logging.conf'))
@@ -19,6 +21,14 @@ logging.config.fileConfig(logging_conf_path)
 log = logging.getLogger(__name__)
 
 blueprint = Blueprint('api', __name__, url_prefix='/api/v{}'.format(settings.API_VERSION))
+
+
+@blueprint.app_errorhandler(CustomFlaskErr)
+def handle_flask_error(error):
+    response = jsonify(error.to_dict())
+    response.status_code = error.status_code
+    print(response)
+    return response
 
 
 def configure_app(flask_app):
@@ -46,7 +56,8 @@ def initialize_app(flask_app):
 
 def main():
     initialize_app(app)
-    log.info('>>>>> Starting development server at http://{}/api/v{}/ <<<<<'.format(app.config['SERVER_NAME'], settings.API_VERSION))
+    log.info('>>>>> Starting development server at http://{}/api/v{}/ <<<<<'.format(app.config['SERVER_NAME'],
+                                                                                    settings.API_VERSION))
 
     with app.app_context():
         # Extensions like Flask-SQLAlchemy now know what the "current" app
