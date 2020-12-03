@@ -2,6 +2,9 @@ from gandalf_app.database import db
 from flask import request
 from gandalf_app.database.models import User
 from .user_utils import save_changes
+from gandalf_app.errors import CustomFlaskErr as notice
+from gandalf_app.auth.jwt_auth import refresh_jwt
+
 
 class Auth:
     @staticmethod
@@ -15,25 +18,24 @@ class Auth:
             # Log input strip or etc. errors.
             # logging.info("Email or password is wrong. " + str(why))
             # Return invalid input error.
-            return notice(status_code=422,return_code=20002)
+            return notice(status_code=422, return_code=20002)
 
-        #if not validate_email(data['email'],verify=True,check_mx=True):
-         #   raise error(status_code=500,return_code=20006)
+        # if not validate_email(data['email'],verify=True,check_mx=True):
+        #   raise error(status_code=500,return_code=20006)
 
         # Check if user information is none.
         if email is None or password is None:
-            raise notice(status_code=422,return_code=20002,action_status=False)
+            raise notice(status_code=422, return_code=20002, action_status=False)
 
         # Get user if it is existed.
         user = User.query.filter_by(email=email).first()
         print(user)
         # Check if user is not existed.
         if user is None:
+            raise notice(status_code=404, return_code=20004, action_status=False)
 
-            raise notice(status_code=404,return_code=20004,action_status=False)
-
-        if not user.is_active:
-            raise notice(status_code=403,return_code=20008,action_status=False)
+        # if not user.is_active:
+        #     raise notice(status_code=403, return_code=20008, action_status=False)
 
         # Generate an access token if the password is correct.
         # Three roles for user, default user role is user.
@@ -100,8 +102,7 @@ class Auth:
             #     }
         else:
             # Return invalid password
-            raise notice(status_code=421,return_code=20003,action_status=False)
-
+            raise notice(status_code=421, return_code=20003, action_status=False)
 
     @staticmethod
     def logout(data):
@@ -127,21 +128,21 @@ class Auth:
 
     @staticmethod
     def refresh_token(data):
-        print (data)
+        print(data)
         refresh_token = request.json.get('refresh_token')
 
         # Get if the refresh token is in blacklist
         ref = Blacklist.query.filter_by(refresh_token=refresh_token).first()
-        print (ref)
+        print(ref)
 
         try:
             data = (refresh_jwt.loads(refresh_token))
-            print (data)
-            #print (s)
+            print(data)
+            # print (s)
 
         except Exception as why:
             # Log the error.
-            print (why)
+            print(why)
 
         ## Create user not to add db. For generating token.
         user = User(email=data['email'])

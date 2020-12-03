@@ -3,8 +3,8 @@ from flask_restplus import Resource
 from gandalf_app.database.models import User
 from gandalf_app.api.auth.serializers import register_model, login_model
 from gandalf_app.auth.user_utils import save_new_user
-#from gandalf_app.auth.auth_utils import Auth
-#from gandalf_app.errors import CustomFlaskErr as notice
+from gandalf_app.auth.auth_utils import Auth
+from gandalf_app.errors import CustomFlaskErr as notice
 from gandalf_app.api.restplus import api
 
 ns = api.namespace('auth', description='Operazioni legate all\'autenticazione')

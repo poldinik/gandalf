@@ -13,3 +13,4 @@ confirm_email_jwt = JWT('HuGIUMKXLoHi4Y2S', expires_in=17200)
 
 # Auth object creation.
 auth = HTTPTokenAuth('Bearer')
+

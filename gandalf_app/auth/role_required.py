@@ -37,7 +37,7 @@ def permission(arg):
 
                 except ValueError:
                     # The Authorization header is either empty or has no token.
-                    return {"message": "Headr Not Found ."}, 404
+                    return {"message": "Header Not Found ."}, 404
 
                 except Exception as why:
 
