@@ -10,8 +10,8 @@ def save_new_user(data):
     user = User.query.filter_by(email=data['email']).first()
     print(data['username'])
 
-    if not validate_email(data['email'], verify=True, check_mx=True):
-        raise notice(status_code=500, return_code=20006, action_status=False)
+    # if not validate_email(data['email'], verify=True, check_mx=True):
+    #     raise notice(status_code=500, return_code=20006, action_status=False)
 
     if not data['password'] or not data['username']:
         raise notice(status_code=422, return_code=20007, action_status=False)
@@ -30,8 +30,7 @@ def save_new_user(data):
 
         email_confirm_token = (user.generate_confirmation_token(data['email'], data['username']))
 
-        confirm_url = (url_for('v1_blueprint.confirm', confirm_token=email_confirm_token, _external=True)) + '?email=' + \
-                      data['email']
+        # confirm_url = (url_for('blueprint.confirm', confirm_token=email_confirm_token, _external=True)) + '?email=' + data['email']
 
         # send confirm email to register user.
         # send_email(to=data['email'], subject='active',template='email_tpl/confirm', confirm_url=confirm_url,user=data['username'],)
@@ -39,7 +38,7 @@ def save_new_user(data):
         raise notice(status_code=200, return_code=30001, action_status=True, playbook={
             'username': data['username'],
             'create_time': str(user.member_since),
-            'confirm_url': str(confirm_url),
+            # 'confirm_url': str(confirm_url),
         })
     else:
         raise notice(status_code=409, return_code=20004)

@@ -19,8 +19,8 @@ class RegisterRequired(Resource):
     @ns.expect(register_model, validate=True)
     def post(self):
         data = request.json
-        # return save_new_user(data=data)
-        return ""
+        return save_new_user(data=data)
+
 
 
 @ns.route('/login')

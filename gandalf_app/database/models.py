@@ -6,7 +6,7 @@ from passlib.apps import custom_app_context as pwd_context
 from gandalf_app.auth.jwt_auth import jwt, auth, confirm_email_jwt
 from datetime import datetime
 from flask import g, request, jsonify
-
+import hashlib
 
 class ProjectStatus(enum.Enum):
     DRAFT = 1
