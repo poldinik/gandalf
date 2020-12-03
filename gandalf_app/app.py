@@ -7,6 +7,7 @@ from gandalf_app.api.project.endpoints.projects import ns as project_namespace
 from gandalf_app.api.user.endpoints.users import ns as user_namespace
 from gandalf_app.api.tool.endpoints.tools import ns as tool_namespace
 from gandalf_app.api.user.endpoints.tokens import ns as token_namespace
+# from gandalf_app.api.auth.endpoints import ns as auth_namespace
 from gandalf_app.api.restplus import api
 from gandalf_app.database import db
 from gandalf_app.database import reset_database
@@ -36,6 +37,7 @@ def initialize_app(flask_app):
     api.add_namespace(project_namespace)
     api.add_namespace(user_namespace)
     api.add_namespace(tool_namespace)
+    # api.add_namespace(auth_namespace)
     flask_app.register_blueprint(blueprint)
     flask_app.register_blueprint(home_bp)
     db.init_app(flask_app)

@@ -4,16 +4,16 @@ from flask_restplus import Resource, Namespace
 from validate_email import validate_email
 from gandalf_app.database import db
 from gandalf_app.auth.jwt_auth import auth
-from gandalf_app.database.model.user import User
+from gandalf_app.database.models import User
 from gandalf_app.auth.jwt_auth import refresh_jwt
 from .serial import register_model, login_model, refresh_token_model, logout_model, rest_password_model
 from gandalf_app.auth.user_utils import save_new_user
 from gandalf_app.auth.auth_utils import Auth
 from gandalf_app.api.errors import CustomFlaskErr as notice
 
-auth_ns = Namespace('auth')
+ns = Namespace('auth')
 
-parser = auth_ns.parser()
+parser = ns.parser()
 parser.add_argument('Authorization',
                     type=str,
                     required=True,
@@ -24,9 +24,8 @@ parser.add_argument('Authorization',
 ######  API
 @auth_ns.route('/register')
 class RegisterRequired(Resource):
-    """注册接口"""
 
-    @auth_ns.doc('用户注册')
+
     @auth_ns.expect(register_model, validate=True)
     def post(self):
         data = request.json
@@ -35,7 +34,7 @@ class RegisterRequired(Resource):
 
 @auth_ns.route('/login')
 class LoginRequired(Resource):
-    """登录接口"""
+
 
     @auth_ns.expect(login_model, validate=True)
     def post(self):
