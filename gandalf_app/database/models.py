@@ -108,9 +108,13 @@ class User(db.Model):
     member_since = db.Column(db.DateTime(), default=datetime.now)
     last_seen = db.Column(db.DateTime(), default=datetime.now)
     is_active = db.Column(db.Boolean, default=False)
+    avatar_hash = db.Column(db.String(32))
 
-    def __init__(self, username):
-        self.username = username
+    def __init__(self, **kwargs):
+        super(User, self).__init__(**kwargs)
+        if self.email is not None and self.avatar_hash is None:
+            self.avatar_hash = hashlib.md5(
+                self.email.encode('utf-8')).hexdigest()
 
     def __repr__(self):
         return '<User %r>' % self.username

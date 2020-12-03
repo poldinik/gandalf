@@ -40,6 +40,17 @@ class SingleUserResource(Resource):
         """
         return None, 204
 
+# @ns.route('/login')
+# class UserResourceAuth(Resource):
+#
+#     def post(self, userId):
+#         """
+#         login for a User.
+#         """
+#         post_data = request.json
+#         print(post_data)
+#         return Auth.login_user(data=post_data)
+
 
 
 

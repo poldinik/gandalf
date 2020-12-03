@@ -7,3 +7,4 @@ asn1crypto==0.24.0
 cryptography==2.3
 itsdangerous==0.24
 passlib==1.7.1
+validate_email==1.3

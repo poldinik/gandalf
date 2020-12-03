@@ -16,6 +16,7 @@ app = Flask(__name__)
 logging_conf_path = os.path.normpath(os.path.join(os.path.dirname(__file__), '../logging.conf'))
 logging.config.fileConfig(logging_conf_path)
 log = logging.getLogger(__name__)
+blueprint = Blueprint('api', __name__, url_prefix='/api/v{}'.format(settings.API_VERSION))
 
 
 def configure_app(flask_app):
@@ -30,7 +31,6 @@ def configure_app(flask_app):
 
 def initialize_app(flask_app):
     configure_app(flask_app)
-    blueprint = Blueprint('api', __name__, url_prefix='/api/v{}'.format(settings.API_VERSION))
     api.init_app(blueprint)
     api.add_namespace(token_namespace)
     api.add_namespace(project_namespace)
