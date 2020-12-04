@@ -20,6 +20,15 @@ from gandalf_app.database import reset_database
 # os.close(db_fd)
 # os.unlink(GandalfApp.app.config['DATABASE'])
 
+# app = GandalfApp
+# initialize_app(app)
+# app.config['TESTING'] = True
+# # resetta db per i test
+# with app.app_context():
+#     reset_database()
+#
+#
+
 @pytest.fixture
 def app():
     app = GandalfApp
