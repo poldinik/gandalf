@@ -14,6 +14,7 @@ from gandalf_app.database import reset_database
 from gandalf_app.views.home import home_bp
 from flask import make_response, jsonify
 from gandalf_app.errors import CustomFlaskErr
+from flask_cors import CORS
 
 app = Flask(__name__)
 logging_conf_path = os.path.normpath(os.path.join(os.path.dirname(__file__), '../logging.conf'))
@@ -21,6 +22,7 @@ logging.config.fileConfig(logging_conf_path)
 log = logging.getLogger(__name__)
 
 blueprint = Blueprint('api', __name__, url_prefix='/api/v{}'.format(settings.API_VERSION))
+cors = CORS(app, resources={r"*": {"origins": "*"}})
 
 
 @blueprint.app_errorhandler(CustomFlaskErr)
