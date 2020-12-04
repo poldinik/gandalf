@@ -7,6 +7,14 @@ logging.config.fileConfig(logging_conf_path)
 log = logging.getLogger(__name__)
 authToken = ''
 
+# ogni test method deve iniziare con test_
+
+# metodi da richiamare per ogni test
+def login():
+    pass
+
+def register():
+    pass
 
 def test_register_login(client):
     mimetype = 'application/json'
@@ -41,5 +49,6 @@ def test_register_login(client):
 # soluzione è mettere app app scoped in app.py e non chiamare ogni volta initialize sennà fa binding ogni volta del blueprint
 def test_example(client):
     response = client.get('/')
+    log.info("token è " + str(authToken))
     log.info(str(response))
     assert response.status_code == 200
