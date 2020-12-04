@@ -4,7 +4,6 @@ from itsdangerous import TimedJSONWebSignatureSerializer as JWT
 # JWT creation.
 jwt = JWT('UbuQgGIdry*H&&I@', expires_in=6000)
 
-
 # Refresh token creation.
 refresh_jwt = JWT('Ag93ZQ3KcGg&KUhR', expires_in=17200)
 
