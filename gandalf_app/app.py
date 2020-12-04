@@ -43,28 +43,41 @@ def configure_app(flask_app):
     flask_app.config['ERROR_404_HELP'] = settings.RESTPLUS_ERROR_404_HELP
 
 
-def initialize_app(flask_app):
-    configure_app(flask_app)
-    api.init_app(blueprint)
-    api.add_namespace(token_namespace)
-    api.add_namespace(project_namespace)
-    api.add_namespace(user_namespace)
-    api.add_namespace(tool_namespace)
-    # api.add_namespace(auth_namespace)
-    flask_app.register_blueprint(blueprint)
-    flask_app.register_blueprint(home_bp)
-    db.init_app(flask_app)
+configure_app(app)
+api.init_app(blueprint)
+api.add_namespace(token_namespace)
+api.add_namespace(project_namespace)
+api.add_namespace(user_namespace)
+api.add_namespace(tool_namespace)
+# api.add_namespace(auth_namespace)
+app.register_blueprint(blueprint)
+app.register_blueprint(home_bp)
+db.init_app(app)
+with app.app_context():
+    reset_database()
+
+
+# def initialize_app(flask_app):
+#     configure_app(flask_app)
+#     api.init_app(blueprint)
+#     api.add_namespace(token_namespace)
+#     api.add_namespace(project_namespace)
+#     api.add_namespace(user_namespace)
+#     api.add_namespace(tool_namespace)
+#     # api.add_namespace(auth_namespace)
+#     flask_app.register_blueprint(blueprint)
+#     flask_app.register_blueprint(home_bp)
+#     db.init_app(flask_app)
 
 
 def main():
-    initialize_app(app)
+    # initialize_app(app)
     log.info('>>>>> Starting development server at http://{}/api/v{}/ <<<<<'.format(app.config['SERVER_NAME'],
                                                                                     settings.API_VERSION))
-
-    with app.app_context():
-        # Extensions like Flask-SQLAlchemy now know what the "current" app
-        # is while within this block. Therefore, you can now run........
-        reset_database()
+    # with app.app_context():
+    # Extensions like Flask-SQLAlchemy now know what the "current" app
+    # is while within this block. Therefore, you can now run........
+    # reset_database()
     app.run(debug=settings.FLASK_DEBUG)
 
 

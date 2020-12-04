@@ -8,6 +8,8 @@ from gandalf_app.errors import CustomFlaskErr as notice
 from gandalf_app.api.restplus import api
 
 ns = api.namespace('auth', description='Operazioni legate all\'autenticazione')
+
+
 # parser = ns.parser()
 
 # parser.add_argument('Authorization',type=str,required=True,location='headers',help='Bearer Access Token')
@@ -20,7 +22,6 @@ class RegisterRequired(Resource):
     def post(self):
         data = request.json
         return save_new_user(data=data)
-
 
 
 @ns.route('/login')

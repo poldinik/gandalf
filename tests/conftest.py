@@ -2,7 +2,7 @@ import os
 import tempfile
 import pytest
 from gandalf_app.app import app as GandalfApp
-from gandalf_app.app import initialize_app
+# from gandalf_app.app import initialize_app
 from gandalf_app import database as GandalfDB
 from gandalf_app.database import reset_database
 
@@ -32,7 +32,7 @@ from gandalf_app.database import reset_database
 @pytest.fixture
 def app():
     app = GandalfApp
-    initialize_app(app)
+    #initialize_app(app)
     app.config['TESTING'] = True
     # resetta db per i test
     with app.app_context():
