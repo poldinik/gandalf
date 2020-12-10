@@ -7,8 +7,18 @@ logging.config.fileConfig(logging_conf_path)
 log = logging.getLogger(__name__)
 
 
+def responseToJson(response):
+    return json.loads(response.get_data())
+
 
 # ogni test method deve iniziare con test_
+def getAuth(client):
+    register(client)
+    loginResponse = login(client)
+    login_json_response = json.loads(loginResponse.get_data())
+    log.info(str(login_json_response))
+    return login_json_response['access_token']
+
 
 # metodi da richiamare per ogni test
 def login(client):
@@ -63,13 +73,17 @@ def test_register_login(client):
 # questo perchè la configurazione della app tramite conftest inizializza la app più volte? Andrebe fatto una volta sola
 # soluzione è mettere app app scoped in app.py e non chiamare ogni volta initialize sennò fa binding ogni volta del blueprint
 # e blueprint può ovviamente essere attaccato una volta sola
-def test_example(client):
-    register(client)
-    loginResponse = login(client)
-    login_json_response = json.loads(loginResponse.get_data())
-    log.info(str(login_json_response))
-    authToken = login_json_response['access_token']
+def test_root_url(client):
+    authToken = getAuth(client)
     response = client.get('/')
     log.info("token è " + str(authToken))
     log.info(str(response))
     assert response.status_code == 200
+
+
+def test_get_empty_project_list(client):
+    authToken = getAuth(client)
+    log.info(str(authToken))
+    response = client.get('/api/v1/projects/', headers={'Authorization': authToken})
+    log.info(str(responseToJson(response)))
+    assert len(responseToJson(response)) == 0
