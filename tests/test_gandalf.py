@@ -5,7 +5,7 @@ import json
 logging_conf_path = os.path.normpath(os.path.join(os.path.dirname(__file__), '../logging.conf'))
 logging.config.fileConfig(logging_conf_path)
 log = logging.getLogger(__name__)
-authToken = ''
+
 
 
 # ogni test method deve iniziare con test_
@@ -55,6 +55,7 @@ def register(client):
 def test_register_login(client):
     registerResponse = register(client)
     loginResponse = login(client)
+
     assert registerResponse.status_code == 200 and loginResponse.status_code == 200
 
 
@@ -63,6 +64,11 @@ def test_register_login(client):
 # soluzione è mettere app app scoped in app.py e non chiamare ogni volta initialize sennò fa binding ogni volta del blueprint
 # e blueprint può ovviamente essere attaccato una volta sola
 def test_example(client):
+    register(client)
+    loginResponse = login(client)
+    login_json_response = json.loads(loginResponse.get_data())
+    log.info(str(login_json_response))
+    authToken = login_json_response['access_token']
     response = client.get('/')
     log.info("token è " + str(authToken))
     log.info(str(response))
