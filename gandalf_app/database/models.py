@@ -18,6 +18,11 @@ class ProjectStatus(enum.Enum):
     ERROR = 5
 
 
+class ResultType(enum.Enum):
+    SINGLE = 1
+    MULTI = 2
+
+
 class Project(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     name = db.Column(db.String(50))
@@ -29,6 +34,7 @@ class Project(db.Model):
     probes = db.relationship('UploadedMediaFile', backref='owner_project')
     references = db.relationship('UploadedMediaFile', backref='owner_project_of_references')
     additionalData = db.relationship('UploadedDataFile', backref='owner_project')
+    results = db.relationship('ResultSummary', backref='owner_project')
 
     def __init__(self, name):
         self.name = name
@@ -39,6 +45,7 @@ class Project(db.Model):
         self.probes = []
         self.references = []
         self.additionalData = []
+        self.results = []
 
     def __repr__(self):
         return '<Project %r>' % self.name
@@ -70,6 +77,22 @@ class UploadedDataFile(db.Model):
 
     def __repr__(self):
         return '<UploadedDataFile %r>' % self.fileName
+
+
+class ResultSummary(db.Model):
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    location = db.Column(db.String())
+    # probes = TODO: definire lista, sarebbe una collection in java
+    toolId = db.Column(db.Integer())
+    name = db.Column(db.String())
+    resultType = db.Column(db.Enum(ResultType))
+    project_id = db.Column(db.Integer, db.ForeignKey('project.id'))
+
+    def __init__(self, name):
+        self.name = name
+
+    def __repr__(self):
+        return '<ResultSummary %r>' % self.name
 
 
 class Tool(db.Model):
