@@ -9,6 +9,7 @@ from flask import g, request, jsonify
 import hashlib
 import logging
 
+
 class ProjectStatus(enum.Enum):
     DRAFT = 1
     PENDING = 2
@@ -25,6 +26,9 @@ class Project(db.Model):
     data = db.relationship('Data', backref='owner_project')
     media = db.relationship('Media', backref='owner_project')
     analysis = db.relationship('Analysis', backref='owner_project')
+    probes = db.relationship('UploadedMediaFile', backref='owner_project')
+    references = db.relationship('UploadedMediaFile', backref='owner_project_of_references')
+    additionalData = db.relationship('UploadedDataFile', backref='owner_project')
 
     def __init__(self, name):
         self.name = name
@@ -32,9 +36,40 @@ class Project(db.Model):
         self.media = []
         self.data = []
         self.analysis = []
+        self.probes = []
+        self.references = []
+        self.additionalData = []
 
     def __repr__(self):
         return '<Project %r>' % self.name
+
+
+class UploadedMediaFile(db.Model):
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    fileName = db.Column(db.String(50))
+    hash = db.Column(db.String())
+    thumbnailLocation = db.Column(db.String())
+    project_id = db.Column(db.Integer, db.ForeignKey('project.id'))
+
+    def __init__(self, fileName):
+        self.fileName = fileName
+
+    def __repr__(self):
+        return '<UploadedMediaFile %r>' % self.fileName
+
+
+class UploadedDataFile(db.Model):
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    fileName = db.Column(db.String(50))
+    hash = db.Column(db.String())
+    dataType = db.Column(db.String())
+    project_id = db.Column(db.Integer, db.ForeignKey('project.id'))
+
+    def __init__(self, fileName):
+        self.fileName = fileName
+
+    def __repr__(self):
+        return '<UploadedDataFile %r>' % self.fileName
 
 
 class Tool(db.Model):
