@@ -17,9 +17,11 @@ HEADER_NOT_FOUND = ({"message": "Header does not exists."}, 999)
 @auth.error_handler
 def unauthorized():
     return make_response(jsonify(
-        {'status': 403,
-         'message': 'unauthorized!'
-         }), 403)
+        {
+            'authEndpoint': settings.FLASK_SERVER_NAME + '/api/v1/auth/login',
+            'reason': 'No token has been sent.'
+        }
+    ), 401)
 
 
 class CustomFlaskErr(Exception):

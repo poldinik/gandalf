@@ -63,9 +63,9 @@ def register(client):
 
 
 def test_register_login(client):
+    log.info("Lancio test per login")
     registerResponse = register(client)
     loginResponse = login(client)
-
     assert registerResponse.status_code == 200 and loginResponse.status_code == 200
 
 
@@ -74,6 +74,7 @@ def test_register_login(client):
 # soluzione è mettere app app scoped in app.py e non chiamare ogni volta initialize sennò fa binding ogni volta del blueprint
 # e blueprint può ovviamente essere attaccato una volta sola
 def test_root_url(client):
+    log.info("Lancio test per base route")
     authToken = getAuth(client)
     response = client.get('/')
     log.info("token è " + str(authToken))
@@ -82,8 +83,41 @@ def test_root_url(client):
 
 
 def test_get_empty_project_list(client):
+    log.info("Lancio test per lista progetti vuota")
     authToken = getAuth(client)
     log.info(str(authToken))
     response = client.get('/api/v1/projects/', headers={'Authorization': authToken})
     log.info(str(responseToJson(response)))
     assert len(responseToJson(response)) == 0
+
+
+def test_post_new_project(client):
+    log.info("Lancio test per creazione nuovo progetto")
+    authToken = getAuth(client)
+    mimetype = 'application/json'
+    headers = {
+        'Content-Type': mimetype,
+        'Authorization': authToken
+    }
+    data = {
+        'name': "progettodiprova",
+    }
+    response = client.post('/api/v1/projects/', data=json.dumps(data), headers=headers)
+    log.info(str(responseToJson(response)))
+    assert response.status_code == 201
+
+def test_get_project_list(client):
+    log.info("Lancio test per lista progetti")
+    authToken = getAuth(client)
+    mimetype = 'application/json'
+    headers = {
+        'Content-Type': mimetype,
+        'Authorization': authToken
+    }
+    data = {
+        'name': "progettodiprova",
+    }
+    client.post('/api/v1/projects/', data=json.dumps(data), headers=headers)
+    responseList = client.get('/api/v1/projects/', headers=headers)
+    log.info(str(responseToJson(responseList)))
+    assert len(responseToJson(responseList)) == 1 and responseToJson(responseList)[0]['name'] == 'progettodiprova'
