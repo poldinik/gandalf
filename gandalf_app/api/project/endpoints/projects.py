@@ -10,6 +10,7 @@ from flask import jsonify
 import os
 from werkzeug.utils import secure_filename
 from gandalf_app.auth.jwt_auth import auth
+from flask_restplus import reqparse
 
 logging_conf_path = os.path.normpath(os.path.join(os.path.dirname(__file__), '../../../../logging.conf'))
 logging.config.fileConfig(logging_conf_path)
@@ -91,6 +92,12 @@ class MediaFilesManagementResource(Resource):
         """
         Upload a Media File for a Project by id.
         """
+        upload_file_parser = reqparse.RequestParser()
+        upload_file_parser.add_argument('name')
+        upload_file_parser.add_argument('dataType', required=True)
+        args = upload_file_parser.parse_args()
+        name = upload_file_parser['name']
+        dataType = upload_file_parser['dataType']
         if 'file' not in request.files:
             flash('No file part')
             # return redirect(request.url)
