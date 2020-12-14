@@ -34,7 +34,7 @@ un ORM (SQLAlchemy). Per lo sviluppo agile si è utilizzato un database di tipo 
 Installazione
 ----------
 
-Per installare le dipendenze necessarie per poter eseguire il progetto, tramite erminale spostarsi nella root directory del progetto ed eseguire:
+Per installare le dipendenze necessarie per poter eseguire il progetto, tramite terminale spostarsi nella root directory del progetto ed eseguire:
 
     sh install.sh
     
@@ -53,15 +53,25 @@ Eseguire:
     
 Lo script avvierà l'applicazione in modalità sviluppo, rendendola disponibile sotto `localhost:8888`. Tramite la url `localhost:8888/api` è possibile visualizzare la pagina che raccoglie la documentazione OpenAPI generata.
 
+
+Test
+----------
+
+Eseguire:
+
+    sh test.sh
+    
+Lo script avvierà una pipeline per integration test relativi agli endpoint esposti dal servizio
+
 Links
 -----
 
-* Website: https://palletsprojects.com/p/flask/
-* Documentation: https://flask.palletsprojects.com/
-* Releases: https://pypi.org/project/Flask/
+* Flask: https://palletsprojects.com/p/flask/
+* Flask-RestPlus: https://flask-restplus.readthedocs.io/en/stable/
 
 
 Author
 -----
 
 * Lorenzo Vannucchi
+

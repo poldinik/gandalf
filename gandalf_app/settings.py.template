@@ -1,5 +1,5 @@
 # Flask settings
-FLASK_SERVER_NAME = 'localhost:8888'  # https://lesc.dinfo.unifi.it/gandalf
+FLASK_SERVER_NAME = 'localhost:8888'
 FLASK_DEBUG = True  # In produzione non usare!!!!! Sennò performance più basse (per hot reloading e altro)
 
 # Flask-Restplus settings
@@ -13,7 +13,4 @@ SQLALCHEMY_DATABASE_URI = 'sqlite:///db.sqlite'
 SQLALCHEMY_TRACK_MODIFICATIONS = False
 
 # DIRECTORY per Multimedia caricati
-MULTIMEDIA_DIRECTORY = '/Users/loretto/Desktop/'
-
-# API version
-API_VERSION = 1
+MULTIMEDIA_DIRECTORY = '/'
