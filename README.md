@@ -49,7 +49,7 @@ Dev Mode
 
 Eseguire:
 
-    sh serve.sh
+    sh app_serve.sh
     
 Lo script avvierà l'applicazione in modalità sviluppo, rendendola disponibile sotto dominio `localhost:8888`. Tramite la url `localhost:8888/api/v1` è possibile visualizzare la pagina che raccoglie la documentazione OpenAPI generata.
 
