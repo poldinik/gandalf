@@ -53,6 +53,16 @@ Eseguire:
     
 Lo script avvierà l'applicazione in modalità sviluppo, rendendola disponibile sotto `localhost:8888`. Tramite la url `localhost:8888/api` è possibile visualizzare la pagina che raccoglie la documentazione OpenAPI generata.
 
+
+Test
+----------
+
+Eseguire:
+
+    sh test.sh
+    
+Lo script avvierà una pipeline per integration test relativi agli endpoint esposti dal servizio
+
 Links
 -----
 
