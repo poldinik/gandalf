@@ -26,15 +26,15 @@ project_details_response = api.model('ProjectDetails', {
 })
 
 media_receipt_response = api.model('MediaReceipt', {
-    'id': fields.Integer(required=True, description='Project Id'),
-    'location': fields.String(required=True, description='Project location'),
-    'name': fields.String(required=True, description='Project name'),
+    'id': fields.Integer(required=True, description='Media Id'),
+    'location': fields.String(required=True, description='Media location'),
+    'fileName': fields.String(required=True, description='Media file name'),
 })
 
 data_receipt_response = api.model('DataReceipt', {
     'id': fields.Integer(required=True, description='Project Id'),
     'location': fields.String(required=True, description='Project location'),
-    'name': fields.String(required=True, description='Project name'),
+    'fileName': fields.String(required=True, description='Project name'),
 })
 
 uploaded_file_response = api.model('UploadedFile', {

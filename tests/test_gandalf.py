@@ -1,6 +1,7 @@
 import logging.config
 import os
 import json
+import io
 
 logging_conf_path = os.path.normpath(os.path.join(os.path.dirname(__file__), '../logging.conf'))
 logging.config.fileConfig(logging_conf_path)
@@ -62,6 +63,7 @@ def register(client):
     return registerResponse
 
 
+# INTEGRATION TEST PER REGITRAZIONE E LOGIN
 def test_register_login(client):
     log.info("Lancio test per login")
     registerResponse = register(client)
@@ -82,6 +84,7 @@ def test_root_url(client):
     assert response.status_code == 200
 
 
+# INTEGRATION TEST PER LISTA VUOTA PROGETTI
 def test_get_empty_project_list(client):
     log.info("Lancio test per lista progetti vuota")
     authToken = getAuth(client)
@@ -91,6 +94,7 @@ def test_get_empty_project_list(client):
     assert len(responseToJson(response)) == 0
 
 
+# INTEGRATION TEST PER CREAZIONE NUOVO PROGETTO
 def test_post_new_project(client):
     log.info("Lancio test per creazione nuovo progetto")
     authToken = getAuth(client)
@@ -106,6 +110,8 @@ def test_post_new_project(client):
     log.info(str(responseToJson(response)))
     assert response.status_code == 201
 
+
+# INTEGRATION TEST PER LISTA PROGETTI NON VUOTA
 def test_get_project_list(client):
     log.info("Lancio test per lista progetti")
     authToken = getAuth(client)
@@ -120,4 +126,97 @@ def test_get_project_list(client):
     client.post('/api/v1/projects/', data=json.dumps(data), headers=headers)
     responseList = client.get('/api/v1/projects/', headers=headers)
     log.info(str(responseToJson(responseList)))
-    assert len(responseToJson(responseList)) == 1 and responseToJson(responseList)[0]['name'] == 'progettodiprova'
+    assert len(responseToJson(responseList)) == 1 \
+           and responseToJson(responseList)[0]['name'] == 'progettodiprova' \
+           and responseToJson(responseList)[0]['location'] == 'localhost:8888/api/v1/projects/1' \
+           and responseToJson(responseList)[0]['status'] == 'ProjectStatus.DRAFT'
+
+
+# INTEGRATION TEST PER CARICAMENTO MEDIA FILE PER SPECIFICO PROGETTO, ROLE = PROBE
+def test_upload_media_probe_for_project(client):
+    log.info("Lancio test per caricare un media per uno specifico progetto")
+    authToken = getAuth(client)
+    mimetype = 'application/json'
+    headers = {
+        'Content-Type': mimetype,
+        'Authorization': authToken
+    }
+    data = {
+        'name': "progettodiprova",
+    }
+    createdResponse = client.post('/api/v1/projects/', data=json.dumps(data), headers=headers)
+    projectId = responseToJson(createdResponse)['id']
+    url = "/api/v1/projects/" + str(projectId) + "/media?name=prova.jpg&role=PROBE"
+    data = dict(
+        file=(io.BytesIO(b'contenuto del file'), "prova_media_file.jpg"),
+    )
+    response = client.post(url, data=data, content_type='multipart/form-data')
+    log.info(responseToJson(response))
+    assert response.status_code == 201
+
+
+# INTEGRATION TEST PER CARICAMENTO MEDIA FILE PER SPECIFICO PROGETTO, ROLE = REFERENCE
+def test_upload_media_reference_for_project(client):
+    log.info("Lancio test per caricare un media per uno specifico progetto")
+    authToken = getAuth(client)
+    mimetype = 'application/json'
+    headers = {
+        'Content-Type': mimetype,
+        'Authorization': authToken
+    }
+    data = {
+        'name': "progettodiprova",
+    }
+    createdResponse = client.post('/api/v1/projects/', data=json.dumps(data), headers=headers)
+    projectId = responseToJson(createdResponse)['id']
+    url = "/api/v1/projects/" + str(projectId) + "/media?name=prova.jpg&role=PROBE"
+    data = dict(
+        file=(io.BytesIO(b'contenuto del file'), "prova_media_file.jpg"),
+    )
+    response = client.post(url, data=data, content_type='multipart/form-data')
+    log.info(responseToJson(response))
+    assert response.status_code == 201
+
+
+# INTEGRATION TEST PER CARICAMENTO DATA FILE PER SPECIFICO PROGETTO
+def test_upload_data_for_project(client):
+    log.info("Lancio test per caricare un media per uno specifico progetto")
+    authToken = getAuth(client)
+    mimetype = 'application/json'
+    headers = {
+        'Content-Type': mimetype,
+        'Authorization': authToken
+    }
+    data = {
+        'name': "progettodiprova",
+    }
+    createdResponse = client.post('/api/v1/projects/', data=json.dumps(data), headers=headers)
+    projectId = responseToJson(createdResponse)['id']
+    url = "/api/v1/projects/" + str(projectId) + "/data?name=datoprova.json&dataType=json"
+    data = dict(
+        file=(io.BytesIO(b'contenuto del file'), "datotest.json"),
+    )
+    response = client.post(url, data=data, content_type='multipart/form-data')
+    log.info(responseToJson(response))
+    assert response.status_code == 201
+
+
+# INTEGRATION TEST PER PROGETTO BY ID
+def test_get_project_by_id(client):
+    log.info("Lancio test per ottenere progetto by id")
+    authToken = getAuth(client)
+    mimetype = 'application/json'
+    headers = {
+        'Content-Type': mimetype,
+        'Authorization': authToken
+    }
+    data = {
+        'name': "progettodiprova",
+    }
+    createdResponse = client.post('/api/v1/projects/', data=json.dumps(data), headers=headers)
+    response = client.get('/api/v1/projects/' + str(responseToJson(createdResponse)['id']), headers=headers)
+    log.info(str(responseToJson(response)))
+    assert responseToJson(response)['name'] == 'progettodiprova' \
+           and responseToJson(response)['location'] == 'localhost:8888/api/v1/projects/1' \
+           and responseToJson(response)['status'] == 'ProjectStatus.DRAFT'
+
