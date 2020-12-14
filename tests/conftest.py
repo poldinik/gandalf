@@ -8,6 +8,7 @@ from gandalf_app.database import reset_database
 import pathlib
 import gandalf_app.settings as settings
 
+
 # @pytest.fixture
 # def client():
 #     # db_fd, GandalfApp.app.config['DATABASE'] = tempfile.mkstemp()
