@@ -182,11 +182,11 @@ class DataFilesManagementResource(Resource):
         return created, 201
 
 
-
-
 @ns.route('/<int:projectId>/data/<int:dataId>')
 class SingleDataFilesManagementResource(Resource):
 
+    @ns.response(404, 'Not Found: the requested project has not been found.')
+    @ns.response(500, 'Backend is not responding.')
     def delete(self, projectId, dataId):
         """
         Deletes a Data File by id from a Project.
