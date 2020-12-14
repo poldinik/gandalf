@@ -87,6 +87,7 @@ class AnalysisStartForProjectResource(Resource):
 @ns.route('/<int:projectId>/media')
 class MediaFilesManagementResource(Resource):
 
+    @ns.response(500, 'Backend is not responding.')
     @api.marshal_with(project_created_response)
     def post(self, projectId):
         """
@@ -94,10 +95,10 @@ class MediaFilesManagementResource(Resource):
         """
         upload_file_parser = reqparse.RequestParser()
         upload_file_parser.add_argument('name')
-        upload_file_parser.add_argument('dataType', required=True)
+        #upload_file_parser.add_argument('dataType', required=True)
         args = upload_file_parser.parse_args()
-        name = upload_file_parser['name']
-        dataType = upload_file_parser['dataType']
+        name = args['name']
+        #dataType = args['dataType']
         if 'file' not in request.files:
             flash('No file part')
             # return redirect(request.url)
@@ -106,9 +107,11 @@ class MediaFilesManagementResource(Resource):
         if file.filename == '':
             flash('No selected file')
             # return redirect(request.url)
+            # /TODO: usare un filtro o va bene qualsiasi estensione?
         if file and allowed_file(file.filename):
             filename = secure_filename(file.filename)
             # salvo il mio file in locale
+            print("Salvo file...")
             file.save(os.path.join(MULTIMEDIA_DIRECTORY, filename))
 
             return add_data_to_project(projectId, os.path.join(MULTIMEDIA_DIRECTORY, filename))
