@@ -11,6 +11,24 @@ def save(project):
     return project
 
 
+def saveMediaFile(mediaFile, projectId):
+    db.session.add(mediaFile)
+    db.session.commit()
+    mediaFile.location = '{}/api/v{}/projects/{}/media/{}'.format(settings.FLASK_SERVER_NAME, settings.API_VERSION,
+                                                                  projectId, mediaFile.id)
+    db.session.commit()
+    return mediaFile
+
+
+def saveDataFile(dataFile, projectId):
+    db.session.add(dataFile)
+    db.session.commit()
+    dataFile.location = '{}/api/v{}/projects/{}/data/{}'.format(settings.FLASK_SERVER_NAME, settings.API_VERSION,
+                                                                 projectId, dataFile.id)
+    db.session.commit()
+    return dataFile
+
+
 def get_all():
     return Project.query.all()
 

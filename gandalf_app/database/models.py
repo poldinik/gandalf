@@ -54,6 +54,7 @@ class Project(db.Model):
 class UploadedMediaFile(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     fileName = db.Column(db.String(50))
+    location = db.Column(db.String(50))
     hash = db.Column(db.String())
     thumbnailLocation = db.Column(db.String())
     project_id = db.Column(db.Integer, db.ForeignKey('project.id'))
@@ -69,6 +70,7 @@ class UploadedDataFile(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     fileName = db.Column(db.String(50))
     hash = db.Column(db.String())
+    location = db.Column(db.String(50))
     dataType = db.Column(db.String())
     project_id = db.Column(db.Integer, db.ForeignKey('project.id'))
 

@@ -51,11 +51,13 @@ Eseguire:
 
     sh serve.sh
     
-Lo script avvierà l'applicazione in modalità sviluppo, rendendola disponibile sotto `localhost:8888`. Tramite la url `localhost:8888/api` è possibile visualizzare la pagina che raccoglie la documentazione OpenAPI generata.
+Lo script avvierà l'applicazione in modalità sviluppo, rendendola disponibile sotto dominio `localhost:8888`. Tramite la url `localhost:8888/api/v1` è possibile visualizzare la pagina che raccoglie la documentazione OpenAPI generata.
 
 
 Test
 ----------
+
+N.B: cambiare il path della multimedia directory nel file gandalf_app/settings.py con uno esistente sulla macchina su cui si fanno girare i test
 
 Eseguire:
 
