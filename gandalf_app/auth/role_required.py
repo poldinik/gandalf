@@ -11,7 +11,7 @@ def permission(arg):
 
             # Get request authorization.
             auth = request.authorization
-            # Check if auth is none or not.
+            # Check if token is none or not.
             if auth is None and 'Authorization' in request.headers:
 
                 try:

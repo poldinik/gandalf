@@ -18,7 +18,7 @@ HEADER_NOT_FOUND = ({"message": "Header does not exists."}, 999)
 def unauthorized():
     return make_response(jsonify(
         {
-            'authEndpoint': settings.FLASK_SERVER_NAME + '/api/v1/auth/login',
+            'authEndpoint': settings.FLASK_SERVER_NAME + '/api/v1/token/login',
             'reason': 'No token has been sent.'
         }
     ), 401)

@@ -189,7 +189,7 @@ class User(db.Model):
     def verify_password(self, password):
         return pwd_context.verify(password, self.password_hash)
 
-    # genera un auth token.
+    # genera un token token.
     def generate_auth_token(self, permission_level):
 
         # controlla se è admin.
