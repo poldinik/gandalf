@@ -1,5 +1,6 @@
 from gandalf_app.database.models import Project, Media, UploadedMediaFile, UploadedDataFile
-from gandalf_app.api.project.dao import save, get_all, get_by_id, saveMediaFile, saveDataFile, deleteProject
+from gandalf_app.api.project.dao import save, get_all, get_by_id, saveMediaFile, saveDataFile, deleteProject, \
+    get_media_by_id, removeMediaFromProject, get_data_by_id, removeDataFromProject
 from gandalf_app import settings
 
 
@@ -21,6 +22,7 @@ def add_media_to_project(projectId, filename, role):
     project = get_by_id(projectId)
     uploadedMediaFile = UploadedMediaFile(filename)
     uploadedMediaFile.fileName = filename
+    uploadedMediaFile.role = role
     createdMediaFile = saveMediaFile(uploadedMediaFile, projectId)
     if role == 'PROBE':
         project.probes.append(createdMediaFile)
@@ -59,3 +61,15 @@ def upload_data():
 
 def get_result():
     pass
+
+
+def deleteMediaForProject(projectId, mediaId):
+    project = get_by_id(projectId)
+    media = get_media_by_id(mediaId)
+    removeMediaFromProject(project, media)
+
+
+def deleteDataForProject(projectId, dataId):
+    project = get_by_id(projectId)
+    data = get_data_by_id(dataId)
+    removeDataFromProject(project, data)

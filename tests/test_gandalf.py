@@ -237,3 +237,55 @@ def test_delete_project_by_id(client):
     response = client.delete('/api/v1/projects/' + str(responseToJson(createdResponse)['id']), headers=headers)
     assert response.status_code == 204
 
+
+# INTEGRATION TEST PER ELIMINAZIONE MEDIA FILE PER SPECIFICO PROGETTO
+def test_delete_media_reference_for_project(client):
+    log.info("Lancio test per eliminazione di un media file per uno specifico progetto")
+    authToken = getAuth(client)
+    mimetype = 'application/json'
+    headers = {
+        'Content-Type': mimetype,
+        'Authorization': authToken
+    }
+    data = {
+        'name': "progettodiprova",
+    }
+    createdResponse = client.post('/api/v1/projects/', data=json.dumps(data), headers=headers)
+    projectId = responseToJson(createdResponse)['id']
+    url = "/api/v1/projects/" + str(projectId) + "/media?name=prova.jpg&role=PROBE"
+    data = dict(
+        file=(io.BytesIO(b'contenuto del file'), "prova_media_file.jpg"),
+    )
+    response = client.post(url, data=data, content_type='multipart/form-data')
+    log.info(responseToJson(response))
+
+    deleteResponse = client.delete('/api/v1/projects/' + str(responseToJson(createdResponse)['id']) + '/media/' + str(
+        responseToJson(response)['id']), headers=headers)
+
+    assert deleteResponse.status_code == 204
+
+
+# INTEGRATION TEST PER ELIMINAZIONE DATA FILE PER SPECIFICO PROGETTO
+def test_delete_data_for_project(client):
+    log.info("Lancio test per eliminare un data file per uno specifico progetto")
+    authToken = getAuth(client)
+    mimetype = 'application/json'
+    headers = {
+        'Content-Type': mimetype,
+        'Authorization': authToken
+    }
+    data = {
+        'name': "progettodiprova",
+    }
+    createdResponse = client.post('/api/v1/projects/', data=json.dumps(data), headers=headers)
+    projectId = responseToJson(createdResponse)['id']
+    url = "/api/v1/projects/" + str(projectId) + "/data?name=datoprova.json&dataType=json"
+    data = dict(
+        file=(io.BytesIO(b'contenuto del file'), "datotest.json"),
+    )
+    response = client.post(url, data=data, content_type='multipart/form-data')
+
+    deleteResponse = client.delete('/api/v1/projects/' + str(responseToJson(createdResponse)['id']) + '/data/' + str(
+        responseToJson(response)['id']), headers=headers)
+
+    assert deleteResponse.status_code == 204
