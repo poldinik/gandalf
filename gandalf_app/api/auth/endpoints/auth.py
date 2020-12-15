@@ -7,7 +7,7 @@ from gandalf_app.auth.auth_utils import Auth
 from gandalf_app.errors import CustomFlaskErr as notice
 from gandalf_app.api.restplus import api
 
-ns = api.namespace('auth', description='Operazioni legate all\'autenticazione')
+ns = api.namespace('token', description='Operazioni legate all\'autenticazione')
 
 
 # parser = ns.parser()
@@ -43,7 +43,7 @@ class Logout(Resource):
         return Auth.logout(data=post_data)
 
 
-@ns.route('/refresh_token')
+@ns.route('/refresh')
 class RefreshTokenRequired(Resource):
 
     def post(self):

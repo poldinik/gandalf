@@ -33,7 +33,7 @@ def login(client):
         'email': "utente1@gmail.com"
     }
 
-    loginUrl = '/api/v1/auth/login'
+    loginUrl = '/api/v1/token/login'
 
     loginResponse = client.post(loginUrl, data=json.dumps(data), headers=headers)
     login_json_response = json.loads(loginResponse.get_data())
@@ -55,7 +55,7 @@ def register(client):
         'email': "utente1@gmail.com"
     }
 
-    registerUrl = '/api/v1/auth/register'
+    registerUrl = '/api/v1/token/register'
 
     registerResponse = client.post(registerUrl, data=json.dumps(data), headers=headers)
     register_json_response = json.loads(registerResponse.get_data())
