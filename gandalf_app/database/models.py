@@ -56,6 +56,7 @@ class UploadedMediaFile(db.Model):
     fileName = db.Column(db.String(50))
     location = db.Column(db.String(50))
     hash = db.Column(db.String())
+    role = db.Column(db.String())
     thumbnailLocation = db.Column(db.String())
     project_id = db.Column(db.Integer, db.ForeignKey('project.id'))
 

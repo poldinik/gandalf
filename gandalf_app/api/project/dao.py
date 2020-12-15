@@ -1,6 +1,6 @@
 from gandalf_app.database import db
 from gandalf_app import settings
-from gandalf_app.database.models import Project
+from gandalf_app.database.models import Project, UploadedMediaFile
 
 
 def save(project):
@@ -40,3 +40,17 @@ def get_all():
 
 def get_by_id(projectId):
     return Project.query.filter_by(id=projectId).first()
+
+
+def get_media_by_id(mediaId):
+    return UploadedMediaFile.query.filter_by(id=mediaId).first()
+
+
+def removeMediaFromProject(project, media):
+    role = media.role
+
+    if role == 'PROBE':
+        project.probes.remove(media)
+    else:
+        project.references.remove(media)
+    db.session.commit()
