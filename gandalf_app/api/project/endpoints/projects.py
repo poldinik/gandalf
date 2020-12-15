@@ -6,7 +6,7 @@ from gandalf_app.api.project.serializers import project, project_created_respons
     media_receipt_response
 from gandalf_app.api.restplus import api
 from gandalf_app.api.project.business import post_project, get_project, get_projects, add_data_to_project, \
-    add_media_to_project
+    add_media_to_project, delete_project
 from gandalf_app.settings import MULTIMEDIA_DIRECTORY
 from flask import jsonify
 import os
@@ -46,6 +46,8 @@ class ProjectsManagementResource(Resource):
 
     @auth.login_required
     @api.marshal_with(project_created_response)
+    # @api.doc(tags=['Project management'])
+    @ns.response(500, 'Backend is not responding.')
     def get(self):
         """
         Returns list of Projects.
@@ -54,7 +56,9 @@ class ProjectsManagementResource(Resource):
         print("progetti recuperati: " + str(len(list(projects))))
         return projects, 200
 
+    @auth.login_required
     @api.expect(project)
+    @ns.response(500, 'Backend is not responding.')
     @api.marshal_with(project_recepit_response)
     def post(self):
         """
@@ -67,6 +71,9 @@ class ProjectsManagementResource(Resource):
 @ns.route('/<int:projectId>')
 class SingleProjectManagementResource(Resource):
 
+    @auth.login_required
+    @ns.response(404, 'Not Found: the requested project has not been found.')
+    @ns.response(500, 'Backend is not responding.')
     @api.marshal_with(project_created_response)
     def get(self, projectId):
         """
@@ -75,16 +82,22 @@ class SingleProjectManagementResource(Resource):
 
         return get_project(projectId), 200
 
-    def delete(self, id):
+    @auth.login_required
+    @ns.response(404, 'Not Found: the requested project has not been found.')
+    @ns.response(500, 'Backend is not responding.')
+    def delete(self, projectId):
         """
         Deletes a Project by id.
         """
+
+        delete_project(projectId)
         return None, 204
 
 
 @ns.route('/<int:projectId>/start')
 class AnalysisStartForProjectResource(Resource):
 
+    @ns.response(500, 'Backend is not responding.')
     def post(self):
         """
         Stars a new Analysis for a Project.

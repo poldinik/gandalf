@@ -57,13 +57,13 @@ Lo script avvierà l'applicazione in modalità sviluppo, rendendola disponibile 
 Test
 ----------
 
-N.B: cambiare il path della multimedia directory nel file gandalf_app/settings.py con uno esistente sulla macchina su cui si fanno girare i test
+N.B: **cambiare il path della multimedia directory** nel file **gandalf_app/settings.py** con uno esistente sulla macchina su cui si fanno girare i test
 
 Eseguire:
 
     sh test.sh
     
-Lo script avvierà una pipeline per integration test relativi agli endpoint esposti dal servizio
+Lo script avvierà una pipeline per integration test relativi agli endpoint esposti dal servizio.
 
 Links
 -----
