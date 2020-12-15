@@ -65,6 +65,11 @@ Eseguire:
     
 Lo script avvierà una pipeline per integration test relativi agli endpoint esposti dal servizio.
 
+Settings
+----------
+
+Nel caso ci sia la necessità di **modificare alcune variabili d'ambiente**, come directory dove vengono caricati i file o il dominio su cui gira l'applicazione, modificare il file **gandalf_app/settings.pyt**
+
 Links
 -----
 
