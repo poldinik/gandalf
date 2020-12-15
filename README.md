@@ -63,7 +63,9 @@ Eseguire:
 
     sh test.sh
     
-Lo script avvierà una pipeline per integration test relativi agli endpoint esposti dal servizio.
+Lo script avvierà una pipeline per integration test relativi agli endpoint esposti dal servizio. Ogni nome di un metodo di test comincia per **test_**, per convienzione libreria pytest.
+Ogni metodo è annotato da un commento che descrive l'intento: i test sono eseguiti tramite libreria pytest, fornendo a runtime un'istanza dell'applicazione e generando
+un oggetto **client** che si occupa di chiamare i servizi relativi alle funzionalità implementate.
 
 Settings
 ----------
