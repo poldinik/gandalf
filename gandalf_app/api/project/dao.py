@@ -24,9 +24,14 @@ def saveDataFile(dataFile, projectId):
     db.session.add(dataFile)
     db.session.commit()
     dataFile.location = '{}/api/v{}/projects/{}/data/{}'.format(settings.FLASK_SERVER_NAME, settings.API_VERSION,
-                                                                 projectId, dataFile.id)
+                                                                projectId, dataFile.id)
     db.session.commit()
     return dataFile
+
+
+def deleteProject(projectId):
+    Project.query.filter_by(id=projectId).delete()
+    db.session.commit()
 
 
 def get_all():

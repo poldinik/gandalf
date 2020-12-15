@@ -220,3 +220,20 @@ def test_get_project_by_id(client):
            and responseToJson(response)['location'] == 'localhost:8888/api/v1/projects/1' \
            and responseToJson(response)['status'] == 'ProjectStatus.DRAFT'
 
+
+# INTEGRATION TEST PER ELIMINAZIONE PROGETTO
+def test_delete_project_by_id(client):
+    log.info("Lancio test per eliminazione progetto by id")
+    authToken = getAuth(client)
+    mimetype = 'application/json'
+    headers = {
+        'Content-Type': mimetype,
+        'Authorization': authToken
+    }
+    data = {
+        'name': "progettodiprova",
+    }
+    createdResponse = client.post('/api/v1/projects/', data=json.dumps(data), headers=headers)
+    response = client.delete('/api/v1/projects/' + str(responseToJson(createdResponse)['id']), headers=headers)
+    assert response.status_code == 204
+

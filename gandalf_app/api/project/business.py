@@ -1,5 +1,5 @@
 from gandalf_app.database.models import Project, Media, UploadedMediaFile, UploadedDataFile
-from gandalf_app.api.project.dao import save, get_all, get_by_id, saveMediaFile, saveDataFile
+from gandalf_app.api.project.dao import save, get_all, get_by_id, saveMediaFile, saveDataFile, deleteProject
 from gandalf_app import settings
 
 
@@ -41,8 +41,8 @@ def add_data_to_project(projectId, filename, dataType):
     return createdDataFile
 
 
-def delete_project():
-    pass
+def delete_project(projectId):
+    deleteProject(projectId)
 
 
 def start_analysis():
