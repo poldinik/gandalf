@@ -73,3 +73,6 @@ def deleteDataForProject(projectId, dataId):
     project = get_by_id(projectId)
     data = get_data_by_id(dataId)
     removeDataFromProject(project, data)
+
+def startAnalysis(projectId):
+    pass

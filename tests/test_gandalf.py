@@ -33,7 +33,7 @@ def login(client):
         'email': "utente1@gmail.com"
     }
 
-    loginUrl = '/api/v1/auth/login'
+    loginUrl = '/api/v1/token/login'
 
     loginResponse = client.post(loginUrl, data=json.dumps(data), headers=headers)
     login_json_response = json.loads(loginResponse.get_data())
@@ -55,7 +55,7 @@ def register(client):
         'email': "utente1@gmail.com"
     }
 
-    registerUrl = '/api/v1/auth/register'
+    registerUrl = '/api/v1/token/register'
 
     registerResponse = client.post(registerUrl, data=json.dumps(data), headers=headers)
     register_json_response = json.loads(registerResponse.get_data())
@@ -289,3 +289,22 @@ def test_delete_data_for_project(client):
         responseToJson(response)['id']), headers=headers)
 
     assert deleteResponse.status_code == 204
+
+
+# INTEGRATION TEST PER START ANALYSIS
+def test_start_analysis_project(client):
+    # TODO: placeholder perchè tool non realmente esistenti al momento
+    log.info("Lancio test per lancio analisi")
+    authToken = getAuth(client)
+    mimetype = 'application/json'
+    headers = {
+        'Content-Type': mimetype,
+        'Authorization': authToken
+    }
+    data = {
+        'name': "progettodiprova",
+    }
+    createdResponse = client.post('/api/v1/projects/', data=json.dumps(data), headers=headers)
+    startResponse = client.post('/api/v1/projects/' + str(responseToJson(createdResponse)['id']) + '/start',
+                                  headers=headers)
+    assert startResponse.status_code == 202

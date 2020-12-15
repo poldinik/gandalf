@@ -1,13 +1,13 @@
 from flask import request
 from flask_restplus import Resource
 from gandalf_app.database.models import User
-from gandalf_app.api.auth.serializers import register_model, login_model
+from gandalf_app.api.token.serializers import register_model, login_model
 from gandalf_app.auth.user_utils import save_new_user
 from gandalf_app.auth.auth_utils import Auth
 from gandalf_app.errors import CustomFlaskErr as notice
 from gandalf_app.api.restplus import api
 
-ns = api.namespace('auth', description='Operazioni legate all\'autenticazione')
+ns = api.namespace('token', description='Operazioni legate all\'autenticazione')
 
 
 # parser = ns.parser()
@@ -37,13 +37,13 @@ class LoginRequired(Resource):
 @ns.route('/logout')
 class Logout(Resource):
 
-    # @auth.login_required
+    # @token.login_required
     def post(self):
         post_data = request.json
         return Auth.logout(data=post_data)
 
 
-@ns.route('/refresh_token')
+@ns.route('/refresh')
 class RefreshTokenRequired(Resource):
 
     def post(self):
