@@ -1,5 +1,6 @@
 from gandalf_app.database.models import Project, Media, UploadedMediaFile, UploadedDataFile
-from gandalf_app.api.project.dao import save, get_all, get_by_id, saveMediaFile, saveDataFile, deleteProject, get_media_by_id, removeMediaFromProject
+from gandalf_app.api.project.dao import save, get_all, get_by_id, saveMediaFile, saveDataFile, deleteProject, \
+    get_media_by_id, removeMediaFromProject, get_data_by_id, removeDataFromProject
 from gandalf_app import settings
 
 
@@ -66,3 +67,9 @@ def deleteMediaForProject(projectId, mediaId):
     project = get_by_id(projectId)
     media = get_media_by_id(mediaId)
     removeMediaFromProject(project, media)
+
+
+def deleteDataForProject(projectId, dataId):
+    project = get_by_id(projectId)
+    data = get_data_by_id(dataId)
+    removeDataFromProject(project, data)

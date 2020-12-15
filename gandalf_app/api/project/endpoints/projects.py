@@ -6,7 +6,7 @@ from gandalf_app.api.project.serializers import project, project_created_respons
     media_receipt_response
 from gandalf_app.api.restplus import api
 from gandalf_app.api.project.business import post_project, get_project, get_projects, add_data_to_project, \
-    add_media_to_project, delete_project, deleteMediaForProject
+    add_media_to_project, delete_project, deleteMediaForProject, deleteDataForProject
 from gandalf_app.settings import MULTIMEDIA_DIRECTORY
 from flask import jsonify
 import os
@@ -205,12 +205,14 @@ class DataFilesManagementResource(Resource):
 @ns.route('/<int:projectId>/data/<int:dataId>')
 class SingleDataFilesManagementResource(Resource):
 
+    @auth.login_required
     @ns.response(404, 'Not Found: the requested project has not been found.')
     @ns.response(500, 'Backend is not responding.')
     def delete(self, projectId, dataId):
         """
         Deletes a Data File by id from a Project.
         """
+        deleteDataForProject(projectId, dataId)
         return None, 204
 
 
