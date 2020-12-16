@@ -17,6 +17,12 @@ class ProjectStatus(enum.Enum):
     COMPLETED = 4
     ERROR = 5
 
+class SupportedDataType(enum.Enum):
+    IMAGE = 1
+    VIDEO = 2
+    AUDIO = 3
+
+
 
 class ResultType(enum.Enum):
     SINGLE = 1
@@ -101,6 +107,11 @@ class ResultSummary(db.Model):
 class Tool(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(50))
+    description = db.Column(db.String())
+    # TODO: vedere lista statica (collection)
+    supportedDataTypes = db.Column(db.Enum(ProjectStatus))
+    supportedDataFormats = db.Column(db.String())
+    references = db.Column(db.String())
 
     def __init__(self, name):
         self.name = name
