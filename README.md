@@ -30,6 +30,14 @@ Sono stati progettati due layer, identificati dai pricipali package quali: **api
 la responsabilità di implementare la loro business logic tramite script chiamati "business.py". Il package database implementa il layer della **persistenza dei dati**, utilizzando
 un ORM (SQLAlchemy). Per lo sviluppo agile si è utilizzato un database di tipo SQLite.
 
+A livello di implementazione generale, ogni servizio REST fa riferimento ai package project, token, tool e user contenuti nel package **api**. L'impianto generale di progettazione
+è stato fatto ispirato dai metodi di sviluppo comunemente utilizzati in ambito Java (bibartizione in lato persistenza e lato servizi) a causa del background di conoscenze di chi ha sviluppato il progetto; così come i file con la definizione dei metodi
+che si occupan di implementare la business logic dei servizi. Per ogni servizio abbiamo i file **business.py, dao.py e serializers.py**. Il business.py si occupa di implementaere la logica delle funzionalità
+servendosi di metodi in stile "data access object" (dao) per comunicare con il lato di persistenza; mentre **serializers.py** è servito per le politiche di marshalling degli oggetto per la comunicazione "on wire".
+
+Il package **gandalf_app/auth** annovera utility function per la gestione della generazione e validazione token JWT. Il codice è stato ispirato ed adattato da esempi trovati nella documentazione 
+di Flask e da progetti open presenti nella repository principale di Flask e Flask-RestPlus.
+
 
 Installazione
 ----------
