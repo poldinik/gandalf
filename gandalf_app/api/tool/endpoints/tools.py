@@ -3,7 +3,8 @@ import logging
 from flask import request
 from flask_restplus import Resource
 from gandalf_app.api.restplus import api
-
+from gandalf_app.api.tool.serializers import tool, tool_recepit_response
+from gandalf_app.auth.jwt_auth import auth
 log = logging.getLogger(__name__)
 
 ns = api.namespace('tools', description='Operazioni legate ai Tool')
@@ -18,6 +19,10 @@ class ToolCollectionResource(Resource):
         """
         return None, 200
 
+    @auth.login_required
+    @api.expect(tool)
+    @ns.response(500, 'Backend is not responding.')
+    @api.marshal_with(tool_recepit_response)
     def post(self):
         """
         Creates a new Tool.
