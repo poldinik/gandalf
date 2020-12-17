@@ -38,14 +38,23 @@ servendosi di metodi in stile "data access object" (dao) per comunicare con il l
 Il package **gandalf_app/auth** annovera utility function per la gestione della generazione e validazione token JWT. Il codice è stato ispirato ed adattato da esempi trovati nella documentazione 
 di Flask e da progetti open presenti nella repository principale di Flask e Flask-RestPlus.
 
-
-Installazione
+Prerequisiti
 ----------
 
 Il seguente progetto utilizza **python virtualenv**. Prima di eseguire i comandi successivi, assicurarsi di aver installato python virtualenv per python 3.X altrimenti l'installazione delle dipendeze genererà errore.
 In caso contrario eseguire, assicurarsi di avere **pip** installato (**pip3** per python 3.X) ed eseguire:
 
 `pip3 install virtualenv`
+
+Ricapitolando e facendo riferimento anche ai badge riportati nell'header di github, i **prerequisiti** sono:
+
+* Python 3.X 
+* pip
+* virtualenv
+
+
+Installazione
+----------
 
 Per installare le dipendenze necessarie per poter eseguire il progetto, tramite terminale spostarsi nella root directory del progetto ed eseguire:
 
