@@ -46,7 +46,7 @@ configure_app(app)
 api.init_app(blueprint)
 api.add_namespace(project_namespace)
 api.add_namespace(tool_namespace)
-# token_namespace SEMBRA ESSERE GIA' REGISTRATO....Dove l'ho già registrato? cache?
+# token_namespace SEMBRA ESSERE GIA REGISTRATO
 # api.add_namespace(token_namespace)
 app.register_blueprint(blueprint)
 app.register_blueprint(home_bp)

@@ -11,9 +11,12 @@ function _out() {
 function install() {
   _out installing...
   virtualenv -p `which python3` venv
+  _out virtualenv activate...
   source venv/bin/activate
   pip install -r requirements.txt
   python setup.py develop
+  _out virtualenv deactivate...
+  deactivate
   _out done!
 }
 
