@@ -4,10 +4,8 @@ import os
 from flask import Flask, Blueprint
 from gandalf_app import settings
 from gandalf_app.api.project.endpoints.projects import ns as project_namespace
-from gandalf_app.api.user.endpoints.users import ns as user_namespace
 from gandalf_app.api.tool.endpoints.tools import ns as tool_namespace
-from gandalf_app.api.user.endpoints.tokens import ns as token_namespace
-from gandalf_app.api.token.endpoints.tokens import ns as auth_namespace
+from gandalf_app.api.token.endpoints.tokens import ns as token_namespace
 from gandalf_app.api.restplus import api
 from gandalf_app.database import db
 from gandalf_app.database import reset_database
@@ -46,29 +44,15 @@ def configure_app(flask_app):
 
 configure_app(app)
 api.init_app(blueprint)
-api.add_namespace(token_namespace)
 api.add_namespace(project_namespace)
-api.add_namespace(user_namespace)
 api.add_namespace(tool_namespace)
-# api.add_namespace(auth_namespace)
+# token_namespace SEMBRA ESSERE GIA' REGISTRATO....Dove l'ho già registrato? cache?
+# api.add_namespace(token_namespace)
 app.register_blueprint(blueprint)
 app.register_blueprint(home_bp)
 db.init_app(app)
 with app.app_context():
     reset_database()
-
-
-# def initialize_app(flask_app):
-#     configure_app(flask_app)
-#     api.init_app(blueprint)
-#     api.add_namespace(token_namespace)
-#     api.add_namespace(project_namespace)
-#     api.add_namespace(user_namespace)
-#     api.add_namespace(tool_namespace)
-#     # api.add_namespace(auth_namespace)
-#     flask_app.register_blueprint(blueprint)
-#     flask_app.register_blueprint(home_bp)
-#     db.init_app(flask_app)
 
 
 def main():

@@ -18,7 +18,7 @@ logging_conf_path = os.path.normpath(os.path.join(os.path.dirname(__file__), '..
 logging.config.fileConfig(logging_conf_path)
 log = logging.getLogger(__name__)
 
-ns = api.namespace('projects', description='Operazioni legate ai Progetti')
+ns = api.namespace('projects', description='Project management')
 
 ALLOWED_EXTENSIONS = {'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'}
 ALLOWED_ROLES = {'PROBE', 'REFERENCE'}
@@ -50,7 +50,7 @@ class ProjectsManagementResource(Resource):
     @ns.response(500, 'Backend is not responding.')
     def get(self):
         """
-        Returns list of Projects.
+        Obtain the list of available projects.
         """
         projects = get_projects()
         print("progetti recuperati: " + str(len(list(projects))))
@@ -62,7 +62,7 @@ class ProjectsManagementResource(Resource):
     @api.marshal_with(project_recepit_response)
     def post(self):
         """
-        Creates a new Project.
+        Create a new project.
         """
         created = post_project(request.json)
         return created, 201
@@ -77,7 +77,7 @@ class SingleProjectManagementResource(Resource):
     @api.marshal_with(project_created_response)
     def get(self, projectId):
         """
-        Returns a Project by id.
+        Obtain project status.
         """
 
         return get_project(projectId), 200
@@ -87,7 +87,7 @@ class SingleProjectManagementResource(Resource):
     @ns.response(500, 'Backend is not responding.')
     def delete(self, projectId):
         """
-        Deletes a Project by id.
+        Delete a project.
         """
 
         delete_project(projectId)
@@ -102,7 +102,7 @@ class AnalysisStartForProjectResource(Resource):
     @ns.response(500, 'Backend is not responding.')
     def post(self, projectId):
         """
-        Starts a new Analysis for a Project.
+        Start an analysis.
         """
         # PLACEHOLDER IN ATTESA DI VERI TOOL
         startAnalysis(projectId)
@@ -117,7 +117,7 @@ class MediaFilesManagementResource(Resource):
     @api.marshal_with(media_receipt_response)
     def post(self, projectId):
         """
-        Upload a Media File for a Project by id.
+        Upload a media file to a project.
         """
         upload_file_parser = reqparse.RequestParser()
         upload_file_parser.add_argument('name')
@@ -166,7 +166,7 @@ class SingleMediaFilesManagementResource(Resource):
     @ns.response(500, 'Backend is not responding.')
     def delete(self, projectId, mediaId):
         """
-        Deletes a Media File by id from a Project.
+        Delete a media file from a project.
         """
         deleteMediaForProject(projectId, mediaId)
         return None, 204
@@ -180,7 +180,7 @@ class DataFilesManagementResource(Resource):
     @api.marshal_with(media_receipt_response)
     def post(self, projectId):
         """
-        Upload a Data File for a Project by id.
+        Upload a data file to a project.
         """
         upload_file_parser = reqparse.RequestParser()
         upload_file_parser.add_argument('name')
@@ -211,7 +211,7 @@ class SingleDataFilesManagementResource(Resource):
     @ns.response(500, 'Backend is not responding.')
     def delete(self, projectId, dataId):
         """
-        Deletes a Data File by id from a Project.
+        Delete a data file from a project.
         """
         deleteDataForProject(projectId, dataId)
         return None, 204
@@ -222,6 +222,6 @@ class ResultInspectionResource(Resource):
 
     def get(self, projectId, resultId):
         """
-        Obtain a result data
+        Obtain a result's data.
         """
         return None, 200

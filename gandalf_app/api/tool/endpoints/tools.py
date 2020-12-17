@@ -7,15 +7,17 @@ from gandalf_app.api.tool.serializers import tool, tool_recepit_response
 from gandalf_app.auth.jwt_auth import auth
 log = logging.getLogger(__name__)
 
-ns = api.namespace('tools', description='Operazioni legate ai Tool')
+ns = api.namespace('tools', description='Introspection')
 
 
 @ns.route('/')
 class ToolCollectionResource(Resource):
 
+    @auth.login_required
+    @ns.response(500, 'Backend is not responding.')
     def get(self):
         """
-        Returns list of Tools.
+        List of available tools.
         """
         return None, 200
 

@@ -33,7 +33,7 @@ def login(client):
         'email': "utente1@gmail.com"
     }
 
-    loginUrl = '/api/v1/token/login'
+    loginUrl = '/api/v1/token/'
 
     loginResponse = client.post(loginUrl, data=json.dumps(data), headers=headers)
     login_json_response = json.loads(loginResponse.get_data())
