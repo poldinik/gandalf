@@ -10,6 +10,7 @@ function _out() {
 
 function serve() {
   _out Start serving application...
+  source venv/bin/activate
   python gandalf_app/app.py
 }
 

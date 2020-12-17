@@ -1,7 +1,7 @@
 from gandalf_app.database.models import Project, Media, UploadedMediaFile, UploadedDataFile
 from gandalf_app.api.project.dao import save, get_all, get_by_id, saveMediaFile, saveDataFile, deleteProject, \
     get_media_by_id, removeMediaFromProject, get_data_by_id, removeDataFromProject
-from gandalf_app import settings
+#from gandalf_app import settings
 
 
 def post_project(data):

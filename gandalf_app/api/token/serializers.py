@@ -7,7 +7,7 @@ register_model = api.model('Register', {
         'password': fields.String(required=True, description='user password'),
 })
 
-login_model = api.model('Login', {
+login_model = api.model('Authentication', {
         'email': fields.String(required=True, description='user email address'),
         'password': fields.String(required=True, description='user password'),
 })
@@ -16,7 +16,7 @@ logout_model = api.model('Logout', {
         'refresh_token': fields.String(required=True, description='refresh token'),
 })
 
-refresh_token_model = api.model('RefeshToken', {
+refresh_token_model = api.model('AuthenticationRefresh', {
         'refresh_token': fields.String(required=True, description='refresh token'),
 })
 

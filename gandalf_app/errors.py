@@ -1,5 +1,6 @@
 from flask import make_response, jsonify
 from gandalf_app.auth.jwt_auth import auth
+from .settings import FLASK_SERVER_NAME
 
 SERVER_ERROR_500 = ({"message": "An error occured."}, 500)
 NOT_FOUND_404 = ({"message": "Resource could not be found."}, 404)
@@ -18,7 +19,7 @@ HEADER_NOT_FOUND = ({"message": "Header does not exists."}, 999)
 def unauthorized():
     return make_response(jsonify(
         {
-            'authEndpoint': settings.FLASK_SERVER_NAME + '/api/v1/token/login',
+            'authEndpoint': FLASK_SERVER_NAME + '/api/v1/token/login',
             'reason': 'No token has been sent.'
         }
     ), 401)

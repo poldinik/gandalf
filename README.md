@@ -42,11 +42,16 @@ di Flask e da progetti open presenti nella repository principale di Flask e Flas
 Installazione
 ----------
 
+Il seguente progetto utilizza **python virtualenv**. Prima di eseguire i comandi successivi, assicurarsi di aver installato python virtualenv per python 3.X altrimenti l'installazione delle dipendeze genererà errore.
+In caso contrario eseguire, assicurarsi di avere **pip** installato (**pip3** per python 3.X) ed eseguire:
+
+`pip3 install virtualenv`
+
 Per installare le dipendenze necessarie per poter eseguire il progetto, tramite terminale spostarsi nella root directory del progetto ed eseguire:
 
     sh install.sh
     
-Questo script avvia una pipeline per l'installazione in sequenza di: un python virtualenv, attivazione virtualenv e installazione requirements.
+Questo script avvia una pipeline per l'installazione in sequenza di: un **python virtualenv**, attivazione virtualenv e installazione requirements.
 La scelta di utilizzare un **virtualenv** permette di installare interprete python  e dipendenze localmente senza interferire con le dipendenze globali eventualmente già presenti
 nella macchina in cui si sta correntemente installando il progetto. Ciò permette di rendere indipendenti gli enviroment di sviluppo e una migliore
 gestione delle dipendenze.

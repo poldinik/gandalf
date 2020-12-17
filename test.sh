@@ -10,6 +10,7 @@ function _out() {
 
 function test() {
   _out Start serving application...
+  source venv/bin/activate
   pytest -v -o log_cli=true
 }
 
