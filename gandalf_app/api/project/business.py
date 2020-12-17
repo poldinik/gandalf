@@ -47,22 +47,6 @@ def delete_project(projectId):
     deleteProject(projectId)
 
 
-def start_analysis():
-    pass
-
-
-def upload_media():
-    pass
-
-
-def upload_data():
-    pass
-
-
-def get_result():
-    pass
-
-
 def deleteMediaForProject(projectId, mediaId):
     project = get_by_id(projectId)
     media = get_media_by_id(mediaId)
@@ -73,6 +57,7 @@ def deleteDataForProject(projectId, dataId):
     project = get_by_id(projectId)
     data = get_data_by_id(dataId)
     removeDataFromProject(project, data)
+
 
 def startAnalysis(projectId):
     pass

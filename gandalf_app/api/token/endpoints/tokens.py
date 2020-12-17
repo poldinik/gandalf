@@ -7,7 +7,7 @@ from gandalf_app.auth.auth_utils import Auth
 from gandalf_app.errors import CustomFlaskErr as notice
 from gandalf_app.api.restplus import api
 
-ns = api.namespace('token', description='Operazioni legate all\'autenticazione')
+ns = api.namespace('token', description='JSON Web Tokens')
 
 
 # parser = ns.parser()
@@ -24,11 +24,14 @@ class RegisterRequired(Resource):
         return save_new_user(data=data)
 
 
-@ns.route('/login')
+@ns.route('/')
 class LoginRequired(Resource):
 
     @ns.expect(login_model, validate=True)
     def post(self):
+        """
+        Obtain a JWT for the user.
+        """
         post_data = request.json
         print(post_data)
         return Auth.login_user(data=post_data)
@@ -47,6 +50,9 @@ class Logout(Resource):
 class RefreshTokenRequired(Resource):
 
     def post(self):
+        """
+            Obtain a JWT for the user.
+        """
         post_data = request.json
         return Auth.refresh_token(data=post_data)
 
