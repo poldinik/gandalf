@@ -72,7 +72,7 @@ Eseguire:
     sh test.sh
     
 Lo script avvierà una pipeline per integration test relativi agli endpoint esposti dal servizio. Ogni nome di un metodo di test comincia per **test_**, per convienzione libreria pytest.
-Ogni metodo è annotato da un commento che descrive l'intento: i test sono eseguiti tramite libreria pytest, fornendo a runtime un'istanza dell'applicazione e generando
+Ogni metodo è annotato da un commento che descrive l'intento: i test sono eseguiti tramite libreria **pytest**, fornendo a runtime un'istanza dell'applicazione e generando
 un oggetto **client** che si occupa di chiamare i servizi relativi alle funzionalità implementate. Al paragrafo **Test** del documento ([Gandalf](https://www.overleaf.com/read/kmzwgwkschkc)) è possibile accedere ad una descrizione 
 più specifica di come sono stati implementati i test di integrazione.
 
@@ -86,7 +86,7 @@ Links
 
 * Flask: https://palletsprojects.com/p/flask/
 * Flask-RestPlus: https://flask-restplus.readthedocs.io/en/stable/
-
+* PyTest: https://docs.pytest.org/en/stable/
 
 Author
 -----
