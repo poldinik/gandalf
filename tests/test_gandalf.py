@@ -306,5 +306,70 @@ def test_start_analysis_project(client):
     }
     createdResponse = client.post('/api/v1/projects/', data=json.dumps(data), headers=headers)
     startResponse = client.post('/api/v1/projects/' + str(responseToJson(createdResponse)['id']) + '/start',
-                                  headers=headers)
+                                headers=headers)
     assert startResponse.status_code == 202
+
+
+# INTEGRATION TEST PER CREAZIONE NUOVO TOOL
+def test_post_new_tool(client):
+    log.info("Lancio test per creazione nuovo tool")
+    authToken = getAuth(client)
+    mimetype = 'application/json'
+    headers = {
+        'Content-Type': mimetype,
+        'Authorization': authToken
+    }
+
+    data = {
+        'name': "tool1",
+        'description': "descrizione di prova",
+        'supportedDataTypes': ['IMAGE', 'VIDEO', 'AUDIO'],
+        'supportedDataFormats': ['JPEG'],
+        'references': [
+            'Jeronymo, Daniel Cavalcanti, Yuri Cassio Campbell Borges, and Leandro dos Santos Coelho. Image forgery detection by semi-automatic wavelet soft-thresholding with error level analysis. Expert Systems with Applications 85 (2017): 348-356.',
+            'Sudiatmika, Ida Bagus Kresna, and Fathur Rahman. Image forgery detection using error level analysis and deep learning. Telkomnika 17.2 (2019): 653-659.'
+        ]
+    }
+    response = client.post('/api/v1/tools/', data=json.dumps(data), headers=headers)
+    log.info(str(responseToJson(response)))
+    assert response.status_code == 201
+
+
+# INTEGRATION TEST PER LISTA TOOLS
+def test_get_tools(client):
+    log.info("Lancio test per lista tool disponibili")
+    authToken = getAuth(client)
+    mimetype = 'application/json'
+    headers = {
+        'Content-Type': mimetype,
+        'Authorization': authToken
+    }
+
+    data = {
+        'name': "tool1",
+        'description': "descrizione di prova",
+        'supportedDataTypes': ['IMAGE', 'VIDEO', 'AUDIO'],
+        'supportedDataFormats': ['JPEG'],
+        'references': [
+            'Jeronymo, Daniel Cavalcanti, Yuri Cassio Campbell Borges, and Leandro dos Santos Coelho. Image forgery detection by semi-automatic wavelet soft-thresholding with error level analysis. Expert Systems with Applications 85 (2017): 348-356.',
+            'Sudiatmika, Ida Bagus Kresna, and Fathur Rahman. Image forgery detection using error level analysis and deep learning. Telkomnika 17.2 (2019): 653-659.'
+        ]
+    }
+    response1 = client.post('/api/v1/tools/', data=json.dumps(data), headers=headers)
+    log.info(str(responseToJson(response1)))
+
+    data2 = {
+        'name': "tool1",
+        'description': "descrizione di prova",
+        'supportedDataTypes': ['IMAGE', 'VIDEO', 'AUDIO'],
+        'supportedDataFormats': ['JPEG'],
+        'references': [
+            'Jeronymo, Daniel Cavalcanti, Yuri Cassio Campbell Borges, and Leandro dos Santos Coelho. Image forgery detection by semi-automatic wavelet soft-thresholding with error level analysis. Expert Systems with Applications 85 (2017): 348-356.',
+            'Sudiatmika, Ida Bagus Kresna, and Fathur Rahman. Image forgery detection using error level analysis and deep learning. Telkomnika 17.2 (2019): 653-659.'
+        ]
+    }
+    response2 = client.post('/api/v1/tools/', data=json.dumps(data2), headers=headers)
+    log.info(str(responseToJson(response2)))
+
+    response = client.get('/api/v1/tools/', headers=headers)
+    assert response.status_code == 200 and len(responseToJson(response)) == 2

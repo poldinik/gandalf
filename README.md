@@ -46,7 +46,7 @@ In caso contrario eseguire, assicurarsi di avere **pip** installato (**pip3** pe
 
 `pip3 install virtualenv`
 
-Ricapitolando e facendo riferimento anche ai badge riportati nell'header di github, i **prerequisiti** sono:
+Ricapitolando e facendo riferimento anche ai badge riportati nell'header di questa repository github, i **prerequisiti** sono:
 
 * Python 3.X 
 * pip
