@@ -108,13 +108,16 @@ class Tool(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(50))
     description = db.Column(db.String())
-    # TODO: vedere lista statica (collection)
-    supportedDataTypes = db.Column(db.Enum(ProjectStatus))
-    supportedDataFormats = db.Column(db.String())
-    references = db.Column(db.String())
+    supportedDataTypes = db.ARRAY(db.String())
+    supportedDataFormats = db.ARRAY(db.String())
+    references = db.ARRAY(db.String())
 
-    def __init__(self, name):
+    def __init__(self, name, description):
         self.name = name
+        self.description = description
+        self.supportedDataTypes = []
+        self.supportedDataFormats = []
+        self.references = []
 
     def __repr__(self):
         return '<Tool %r>' % self.name
