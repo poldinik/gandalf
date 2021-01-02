@@ -108,9 +108,13 @@ class Tool(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(50))
     description = db.Column(db.String())
-    supportedDataTypes = db.ARRAY(db.String())
-    supportedDataFormats = db.ARRAY(db.String())
-    references = db.ARRAY(db.String())
+    #supportedDataTypes = db.ARRAY(db.String())
+    #supportedDataFormats = db.ARRAY(db.String())
+    #references = db.ARRAY(db.String())
+
+    supportedDataTypes = db.Column(db.PickleType())
+    supportedDataFormats = db.Column(db.PickleType())
+    references = db.Column(db.PickleType())
 
     def __init__(self, name, description):
         self.name = name

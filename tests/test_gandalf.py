@@ -372,4 +372,5 @@ def test_get_tools(client):
     log.info(str(responseToJson(response2)))
 
     response = client.get('/api/v1/tools/', headers=headers)
+    log.info(str(responseToJson(response)))
     assert response.status_code == 200 and len(responseToJson(response)) == 2
