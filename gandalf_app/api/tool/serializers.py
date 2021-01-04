@@ -5,9 +5,9 @@ tool_datail_response = api.model('ToolDetail', {
     'id': fields.Integer(required=True, description='tool id'),
     'name': fields.String(required=True, description='tool name'),
     'description': fields.String(required=True, description='tool description'),
-    # 'supportedDataTypes': fields.List(fields.String()),
-    # 'supportedDataFormats': fields.List(fields.String()),
-    # 'references': fields.List(fields.String())
+    'supportedDataTypes': fields.List(fields.String()),
+    'supportedDataFormats': fields.List(fields.String()),
+    'references': fields.List(fields.String())
 })
 
 tool = api.model('Tool', {

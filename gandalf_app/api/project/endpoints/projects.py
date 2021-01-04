@@ -3,7 +3,7 @@ import logging.config
 from flask import request
 from flask_restplus import Resource
 from gandalf_app.api.project.serializers import project, project_created_response, project_recepit_response, \
-    media_receipt_response
+    media_receipt_response, project_details_response
 from gandalf_app.api.restplus import api
 from gandalf_app.api.project.business import post_project, get_project, get_projects, add_data_to_project, \
     add_media_to_project, delete_project, deleteMediaForProject, deleteDataForProject, startAnalysis
@@ -74,7 +74,7 @@ class SingleProjectManagementResource(Resource):
     @auth.login_required
     @ns.response(404, 'Not Found: the requested project has not been found.')
     @ns.response(500, 'Backend is not responding.')
-    @api.marshal_with(project_created_response)
+    @api.marshal_with(project_details_response)
     def get(self, projectId):
         """
         Obtain project status.

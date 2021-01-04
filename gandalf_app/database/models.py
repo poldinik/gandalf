@@ -17,11 +17,11 @@ class ProjectStatus(enum.Enum):
     COMPLETED = 4
     ERROR = 5
 
+
 class SupportedDataType(enum.Enum):
     IMAGE = 1
     VIDEO = 2
     AUDIO = 3
-
 
 
 class ResultType(enum.Enum):
@@ -91,7 +91,7 @@ class UploadedDataFile(db.Model):
 class ResultSummary(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     location = db.Column(db.String())
-    # probes = TODO: definire lista, sarebbe una collection in java
+    probes = db.Column(db.PickleType())
     toolId = db.Column(db.Integer())
     name = db.Column(db.String())
     resultType = db.Column(db.Enum(ResultType))
@@ -99,6 +99,7 @@ class ResultSummary(db.Model):
 
     def __init__(self, name):
         self.name = name
+        self.probes = []
 
     def __repr__(self):
         return '<ResultSummary %r>' % self.name
@@ -108,9 +109,14 @@ class Tool(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(50))
     description = db.Column(db.String())
-    supportedDataTypes = db.ARRAY(db.String())
-    supportedDataFormats = db.ARRAY(db.String())
-    references = db.ARRAY(db.String())
+
+    # supportedDataTypes = db.ARRAY(db.String())
+    # supportedDataFormats = db.ARRAY(db.String())
+    # references = db.ARRAY(db.String())
+
+    supportedDataTypes = db.Column(db.PickleType())
+    supportedDataFormats = db.Column(db.PickleType())
+    references = db.Column(db.PickleType())
 
     def __init__(self, name, description):
         self.name = name

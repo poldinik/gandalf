@@ -21,7 +21,11 @@ class ToolCollectionResource(Resource):
         """
         List of available tools.
         """
-        return get_tools(), 200
+        print("print tools!")
+        tools = get_tools()
+        # print(tools[0].supportedDataTypes)
+
+        return tools, 200
 
     @auth.login_required
     @api.expect(tool)
