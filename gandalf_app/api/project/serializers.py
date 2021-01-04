@@ -5,6 +5,30 @@ project = api.model('Project', {
     'name': fields.String(required=True, description='Project name'),
 })
 
+uploadedMediaFile = api.model('UploadedMediaFile', {
+    'id': fields.Integer(required=True, description='UploadedMediaFile Id'),
+    'fileName': fields.String(required=True, description='UploadedMediaFile file name'),
+    # TODO: hash
+    # TODO:  thumbnail
+})
+
+uploadedDataFile = api.model('UploadedDataFile', {
+    'id': fields.Integer(required=True, description='UploadedDataFile Id'),
+    'fileName': fields.String(required=True, description='UploadedDataFile file name'),
+    # TODO: hash
+    # TODO:  thumbnail
+    'dataType': fields.String(required=True, description='UploadedDataFile file data type'),
+})
+
+resultSummary = api.model('ResultSummary', {
+    'id': fields.Integer(required=True, description='ResultSummary Id'),
+    'location': fields.String(required=True, description='ResultSummary location'),
+    'probes': fields.List(fields.String()),
+    'toolId': fields.Integer(),
+    'name': fields.String(required=True, description='A description of this result '),
+    'resultType': fields.String(required=True, description='Type of result produced by the used tool.'),
+})
+
 project_created_response = api.model('ProjectStatus', {
     'id': fields.Integer(required=True, description='Project Id'),
     'location': fields.String(required=True, description='Project location'),
@@ -20,9 +44,13 @@ project_recepit_response = api.model('ProjectReceipt', {
 
 project_details_response = api.model('ProjectDetails', {
     'id': fields.Integer(required=True, description='Project Id'),
-    'location': fields.String(required=True, description='Project location'),
+    'status': fields.String(required=True, description='Project status'),
     'name': fields.String(required=True, description='Project name'),
-    # TODO: serializzare probes, reference e additional data
+    'location': fields.String(required=True, description='Project location'),
+    'probes': fields.List(fields.Nested(uploadedMediaFile)),
+    'references': fields.List(fields.Nested(uploadedMediaFile)),
+    'additionalData': fields.List(fields.Nested(uploadedDataFile)),
+    'results': fields.List(fields.Nested(resultSummary))
 })
 
 media_receipt_response = api.model('MediaReceipt', {
