@@ -19,3 +19,7 @@ MULTIMEDIA_DIRECTORY = os.path.dirname(os.path.realpath(__file__))
 
 # API version
 API_VERSION = 1
+
+# GANDALF ENDPOIN
+
+GANDALF = 'http://localhost:8888/'

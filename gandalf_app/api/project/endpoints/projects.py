@@ -137,7 +137,7 @@ class AnalysisPingForProjectResource(Resource):
 @ns.route('/<int:projectId>/listen')
 class AnalysisListenForProjectResource(Resource):
 
-    @auth.login_required
+    # @auth.login_required
     @ns.response(404, 'Not Found: the requested project has not been found.')
     @ns.response(500, 'Backend is not responding.')
     def get(self, projectId):

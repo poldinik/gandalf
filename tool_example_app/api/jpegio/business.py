@@ -1,5 +1,5 @@
 from tool_example_app.database.models import Project, Media, UploadedMediaFile, UploadedDataFile
-from tool_example_app.api.project.dao import save, get_all, get_by_id, saveMediaFile, saveDataFile, deleteProject, \
+from tool_example_app.api.jpegio.dao import save, get_all, get_by_id, saveMediaFile, saveDataFile, deleteProject, \
     get_media_by_id, removeMediaFromProject, get_data_by_id, removeDataFromProject
 #from gandalf_app import settings
 

@@ -10,3 +10,9 @@ manca endpoint per ottenere via get un media
 
 quando lancio un'analisi, viene generato uuid che identifica l'analisi lanciata
 tramite quel uuid il tool poi lo ripassa al webhook
+
+per installare jpegio
+
+python /Users/loretto/Downloads/jpegio/setup.py install
+
+ pip install /Users/loretto/Downloads/jpegio/dist/jpegio-0.2.1-cp37-cp37m-macosx_10_7_x86_64.whl
