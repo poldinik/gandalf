@@ -8,8 +8,8 @@ from sqlalchemy.orm.exc import NoResultFound
 log = logging.getLogger(__name__)
 
 api = Api(version='1.0',
-          title='Gandalf',
-          description='Multimedia analysis API',
+          title='JPEGIO',
+          description='A python package for accessing the internal variables of JPEG file format such as DCT coefficients and quantization tables.',
           terms_url='https://lesc.dinfo.unifi.it/gandalf/terms',
           contact_url='https://lesc.dinfo.unifi.it/gandalf/support',
           license='Apache 2.0',

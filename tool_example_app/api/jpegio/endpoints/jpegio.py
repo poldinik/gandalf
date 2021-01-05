@@ -2,11 +2,7 @@ import logging.config
 
 from flask import request
 from flask_restplus import Resource
-from tool_example_app.api.jpegio.serializers import project, project_created_response, project_recepit_response, \
-    media_receipt_response, project_details_response
 from tool_example_app.api.restplus import api
-from tool_example_app.api.jpegio.business import post_project, get_project, get_projects, add_data_to_project, \
-    add_media_to_project, delete_project, deleteMediaForProject, deleteDataForProject, startAnalysis
 from tool_example_app.settings import MULTIMEDIA_DIRECTORY
 from flask import jsonify
 import os
@@ -43,7 +39,7 @@ class JpegIOResource(Resource):
         projectId = args['projectId']
 
         def run_tool():
-            log.info("Running thread")
+            log.info("Running thread per elaborazione tool")
             # emula elaborazione tool
             time.sleep(5)
             # jpeg = jio.read("image.jpg")
