@@ -293,7 +293,6 @@ def test_delete_data_for_project(client):
 
 # INTEGRATION TEST PER START ANALYSIS
 def test_start_analysis_project(client):
-    # TODO: placeholder perchè tool non realmente esistenti al momento
     log.info("Lancio test per lancio analisi")
     authToken = getAuth(client)
     mimetype = 'application/json'
@@ -307,6 +306,7 @@ def test_start_analysis_project(client):
     createdResponse = client.post('/api/v1/projects/', data=json.dumps(data), headers=headers)
     startResponse = client.post('/api/v1/projects/' + str(responseToJson(createdResponse)['id']) + '/start',
                                 headers=headers)
+    log.info(responseToJson(startResponse))
     assert startResponse.status_code == 202
 
 

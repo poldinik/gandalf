@@ -76,3 +76,7 @@ result_details_response = api.model('ResultDetails', {
     'location': fields.String(required=True, description='Project location'),
     'name': fields.String(required=True, description='Project name'),
 })
+
+start_analysis_recepit_response = api.model('StartAnalysisRecepit', {
+    'uuid': fields.String(required=True, description='Uuid for analysis'),
+})

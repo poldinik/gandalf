@@ -8,15 +8,15 @@ project = api.model('Project', {
 uploadedMediaFile = api.model('UploadedMediaFile', {
     'id': fields.Integer(required=True, description='UploadedMediaFile Id'),
     'fileName': fields.String(required=True, description='UploadedMediaFile file name'),
-    # TODO: hash
-    # TODO:  thumbnail
+    'hash': fields.String(required=True, description='UploadedMediaFile hash code of file'),
+    # TODO:  thumbnail, come crearlo?
 })
 
 uploadedDataFile = api.model('UploadedDataFile', {
     'id': fields.Integer(required=True, description='UploadedDataFile Id'),
     'fileName': fields.String(required=True, description='UploadedDataFile file name'),
-    # TODO: hash
-    # TODO:  thumbnail
+    'hash': fields.String(required=True, description='UploadedDataFile hash code of file'),
+    # TODO:  thumbnail, come crearlo?
     'dataType': fields.String(required=True, description='UploadedDataFile file data type'),
 })
 
@@ -75,4 +75,9 @@ result_details_response = api.model('ResultDetails', {
     'id': fields.Integer(required=True, description='Project Id'),
     'location': fields.String(required=True, description='Project location'),
     'name': fields.String(required=True, description='Project name'),
+})
+
+
+start_analysis_response = api.model('StartAnalysis', {
+    'uuid': fields.Integer(required=True, description='Uuid for analysis'),
 })

@@ -4,3 +4,9 @@ cache su endpoint che dovrebbero elaborare e trasmettere molte immagini (usare l
 git reset --hard 8abadcd49ba2d259578207de6d37ffc6334dbe98 && git push --force
 
 git push origin develop --force
+
+thumbnail come li creo?
+manca endpoint per ottenere via get un media
+
+quando lancio un'analisi, viene generato uuid che identifica l'analisi lanciata
+tramite quel uuid il tool poi lo ripassa al webhook

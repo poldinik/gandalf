@@ -69,6 +69,7 @@ class UploadedMediaFile(db.Model):
     def __init__(self, fileName):
         self.fileName = fileName
 
+
     def __repr__(self):
         return '<UploadedMediaFile %r>' % self.fileName
 

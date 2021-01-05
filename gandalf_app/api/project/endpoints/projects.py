@@ -3,7 +3,7 @@ import logging.config
 from flask import request
 from flask_restplus import Resource
 from gandalf_app.api.project.serializers import project, project_created_response, project_recepit_response, \
-    media_receipt_response, project_details_response
+    media_receipt_response, project_details_response, start_analysis_recepit_response
 from gandalf_app.api.restplus import api
 from gandalf_app.api.project.business import post_project, get_project, get_projects, add_data_to_project, \
     add_media_to_project, delete_project, deleteMediaForProject, deleteDataForProject, startAnalysis
@@ -13,6 +13,8 @@ import os
 from werkzeug.utils import secure_filename
 from gandalf_app.auth.jwt_auth import auth
 from flask_restplus import reqparse
+import flask
+from .sse import announcer, format_sse
 
 logging_conf_path = os.path.normpath(os.path.join(os.path.dirname(__file__), '../../../../logging.conf'))
 logging.config.fileConfig(logging_conf_path)
@@ -100,13 +102,60 @@ class AnalysisStartForProjectResource(Resource):
     @auth.login_required
     @ns.response(404, 'Not Found: the requested project has not been found.')
     @ns.response(500, 'Backend is not responding.')
+    @api.marshal_with(start_analysis_recepit_response)
     def post(self, projectId):
         """
         Start an analysis.
         """
-        # PLACEHOLDER IN ATTESA DI VERI TOOL
-        startAnalysis(projectId)
-        return None, 202
+        analysisUuid = startAnalysis(projectId)
+        response = {
+            'uuid': analysisUuid
+        }
+        return response, 202
+
+
+@ns.route('/<int:projectId>/ping')
+class AnalysisPingForProjectResource(Resource):
+
+    @auth.login_required
+    @ns.response(404, 'Not Found: the requested project has not been found.')
+    @ns.response(500, 'Backend is not responding.')
+    def get(self, projectId):
+        """
+        Webhook per endpoint del tool per notificare lo stato di elaborazione
+        """
+        parser = reqparse.RequestParser()
+        parser.add_argument('uuid')
+        # upload_file_parser.add_argument('dataType', required=True)
+        args = parser.parse_args()
+        analysisUuid = args['uuid']
+        msg = format_sse(data=analysisUuid)
+        announcer.announce(msg=msg)
+        return {}, 200
+
+
+@ns.route('/<int:projectId>/listen')
+class AnalysisListenForProjectResource(Resource):
+
+    @auth.login_required
+    @ns.response(404, 'Not Found: the requested project has not been found.')
+    @ns.response(500, 'Backend is not responding.')
+    def get(self, projectId):
+        """
+        SSE reactive verso il client per stato elaborazione analisi
+        """
+        parser = reqparse.RequestParser()
+        parser.add_argument('uuid')
+        args = parser.parse_args()
+        analysisUuid = args['uuid']
+
+        def stream():
+            messages = announcer.listen()  # ritorna un queue.Queue
+            while True:
+                msg = messages.get()  # blocca finchè non arriva un nuovo messaggio
+                yield msg
+
+        return flask.Response(stream(), mimetype='text/event-stream')
 
 
 @ns.route('/<int:projectId>/media')
