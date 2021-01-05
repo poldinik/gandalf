@@ -1,0 +1,13 @@
+
+
+.multi-question {
+    border: 0;
+}
+
+
+.multi-ans-button {
+    border: 0;
+    border-radius: 4px;
+    padding: 2px 15px 2px 15px;
+    margin: 2px;
+}

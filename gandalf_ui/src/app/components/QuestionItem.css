@@ -1,0 +1,11 @@
+.edit-button {
+    cursor: pointer;
+    display: inline;
+    margin-left: 10px;
+}
+
+.delete-button {
+    cursor: pointer;
+    display: inline;
+    margin-left: 10px;
+}

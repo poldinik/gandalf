@@ -1,0 +1,12 @@
+.palette-bicolori {
+    max-height: 800px;
+    overflow-y: scroll;
+}
+
+.bicolore-modal-footer {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    z-index: 7;
+    background-color: white;
+}

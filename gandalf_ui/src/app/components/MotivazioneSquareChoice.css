@@ -1,0 +1,35 @@
+
+.motivazione-square-choice {
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(.25,.8,.25,1);
+    height: 230px;
+    margin-bottom: 10px;
+}
+
+.motivazione-square-choice:hover {
+    box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
+    cursor: pointer;
+}
+
+
+.motivazione-choice-label {
+    position: absolute;
+    bottom: -12px;
+    text-align: center;
+    width: 100%;
+    color: white;
+}
+
+.motivazione-choice-title {
+    margin: 0;
+    line-height: 2;
+    font-size: 14px;
+}
+
+
+.motivaizone-selected-checked {
+    color: white;
+    position: absolute;
+    top: 10px;
+    right: 14px;
+}

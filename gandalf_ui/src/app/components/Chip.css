@@ -1,0 +1,23 @@
+
+.chip {
+    display: inline-block;
+    padding: 0 25px;
+    height: 40px;
+    line-height: 40px;
+    border-radius: 25px;
+    background-color: #f1f1f1;
+    margin: 5px 5px;
+}
+
+.closebtn {
+    padding-left: 10px;
+    color: #888;
+    font-weight: bold;
+    float: right;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+.closebtn:hover {
+    color: #000;
+}

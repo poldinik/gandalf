@@ -1,0 +1,14 @@
+.zoom-controller {
+    position: absolute;
+    top: 30px;
+    right: 77px;
+    font-size: 13px;
+}
+
+
+.zoom-button {
+    border-radius: 4px;
+    border: 3px solid #0d47a1;
+    background-color: #0d47a1;
+    color: white;
+}
