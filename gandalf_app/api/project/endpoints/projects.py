@@ -6,7 +6,8 @@ from gandalf_app.api.project.serializers import project, project_created_respons
     media_receipt_response, project_details_response, start_analysis_recepit_response
 from gandalf_app.api.restplus import api
 from gandalf_app.api.project.business import post_project, get_project, get_projects, add_data_to_project, \
-    add_media_to_project, delete_project, deleteMediaForProject, deleteDataForProject, startAnalysis
+    add_media_to_project, delete_project, deleteMediaForProject, deleteDataForProject, startAnalysis, getUuid, \
+    update_analysis, get_project_with_analysis_with_uuid
 from gandalf_app.settings import MULTIMEDIA_DIRECTORY
 from flask import jsonify
 import os
@@ -15,6 +16,7 @@ from gandalf_app.auth.jwt_auth import auth
 from flask_restplus import reqparse
 import flask
 from .sse import announcer, format_sse
+from pathlib import Path
 
 logging_conf_path = os.path.normpath(os.path.join(os.path.dirname(__file__), '../../../../logging.conf'))
 logging.config.fileConfig(logging_conf_path)
@@ -99,19 +101,38 @@ class SingleProjectManagementResource(Resource):
 @ns.route('/<int:projectId>/start')
 class AnalysisStartForProjectResource(Resource):
 
-    @auth.login_required
+    # @auth.login_required
     @ns.response(404, 'Not Found: the requested project has not been found.')
     @ns.response(500, 'Backend is not responding.')
     @api.marshal_with(start_analysis_recepit_response)
     def post(self, projectId):
         """
-        Start an analysis.
+        Start an analysis for a project
         """
-        analysisUuid = startAnalysis(projectId)
+
+        # curl http://localhost:8888/api/v1/projects/1/start -d "tools=1,2,3"
+        # http://localhost:8888/api/v1/projects/1/start?tools=1,2,3 POST
+        parser = reqparse.RequestParser()
+        parser.add_argument('tools', action='split', required=True)
+        args = parser.parse_args()
+        toolIds = list(args['tools'])
+
+        log.info("Creazione cartella per risultati dell'analisi")
+        result_uuid = getUuid()
+        result_path = MULTIMEDIA_DIRECTORY + '/' + result_uuid + "-" + str(projectId)
+        Path(result_path).mkdir(parents=True, exist_ok=True)
+
+        log.info("tools: " + str(len(toolIds)))
+        for i in toolIds:
+            toolId = int(i)
+            log.info("Lancia analisi per il tool " + str(toolId))
+            startAnalysis(projectId, toolId, result_uuid, result_path, len(toolIds))
+
+        # risposta con uuid dell'analisi lanciata
         response = {
-            'uuid': analysisUuid
+            'uuid': result_uuid
         }
-        return response, 202
+        return response, 200
 
 
 @ns.route('/<int:projectId>/ping')
@@ -129,6 +150,8 @@ class AnalysisPingForProjectResource(Resource):
         # upload_file_parser.add_argument('dataType', required=True)
         args = parser.parse_args()
         analysisUuid = args['uuid']
+        log.info("Aggiorna l'analisi")
+        update_analysis(analysisUuid)
         msg = format_sse(data=analysisUuid)
         announcer.announce(msg=msg)
         return {}, 200
@@ -137,7 +160,7 @@ class AnalysisPingForProjectResource(Resource):
 @ns.route('/<int:projectId>/listen')
 class AnalysisListenForProjectResource(Resource):
 
-    @auth.login_required
+    # @auth.login_required
     @ns.response(404, 'Not Found: the requested project has not been found.')
     @ns.response(500, 'Backend is not responding.')
     def get(self, projectId):
@@ -156,6 +179,25 @@ class AnalysisListenForProjectResource(Resource):
                 yield msg
 
         return flask.Response(stream(), mimetype='text/event-stream')
+
+
+@ns.route('/analysis')
+class ProjectWithAnalysisResource(Resource):
+
+    # @auth.login_required
+    @ns.response(404, 'Not Found: the requested project has not been found.')
+    @ns.response(500, 'Backend is not responding.')
+    @api.marshal_with(project_details_response)
+    def get(self):
+        """
+        Ottiene il progetto che possiede una analisi con un certo uuid
+        """
+        parser = reqparse.RequestParser()
+        parser.add_argument('uuid', required=True)
+        args = parser.parse_args()
+        analysisUuid = args['uuid']
+
+        return get_project_with_analysis_with_uuid(analysisUuid), 200
 
 
 @ns.route('/<int:projectId>/media')

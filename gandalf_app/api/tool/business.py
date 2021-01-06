@@ -10,6 +10,8 @@ def post_tool(data):
     supportedDataFormats = data.get('supportedDataFormats')
     references = data.get('references')
     tool = Tool(name, description)
+    tool.endpoint = data.get('endpoint')
+    tool.method = data.get('method')
     tool.supportedDataTypes = supportedDataTypes
     tool.supportedDataFormats = supportedDataFormats
     tool.references = references

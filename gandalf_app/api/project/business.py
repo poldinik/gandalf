@@ -1,11 +1,13 @@
-from gandalf_app.database.models import Project, Media, UploadedMediaFile, UploadedDataFile
+from gandalf_app.database.models import Project, Media, UploadedMediaFile, UploadedDataFile, Analysis
 from gandalf_app.api.project.dao import save, get_all, get_by_id, saveMediaFile, saveDataFile, deleteProject, \
-    get_media_by_id, removeMediaFromProject, get_data_by_id, removeDataFromProject
+    get_media_by_id, removeMediaFromProject, get_data_by_id, removeDataFromProject, get_tool_by_id, saveAnalysis, \
+    get_analysis_by_uuid
 # from gandalf_app import settings
 from gandalf_app.settings import MULTIMEDIA_DIRECTORY
 import hashlib
 import os
 import uuid
+import requests
 
 
 def getUuid():
@@ -33,8 +35,8 @@ def get_projects():
     return get_all()
 
 
-def get_project(projecId):
-    return get_by_id(projecId)
+def get_project(projectId):
+    return get_by_id(projectId)
 
 
 def add_media_to_project(projectId, filename, role):
@@ -85,6 +87,44 @@ def deleteDataForProject(projectId, dataId):
     removeDataFromProject(project, data)
 
 
-def startAnalysis(projectId):
-    analysisUuid = getUuid()
-    return analysisUuid
+def startAnalysis(projectId, toolId, result_uuid, result_path, tools):
+    project = get_by_id(projectId)
+    tool = get_tool_by_id(toolId)
+
+    tool_endpoint = tool.endpoint
+    tool_method = tool.method
+
+    if tool_method == 'POST':
+        requests.post(tool_endpoint + 'uuid=' + str(result_uuid))
+    else:
+        requests.get(tool_endpoint + 'uuid=' + str(result_uuid))
+
+    # crea un'analisi su db
+    analysis = Analysis()
+    analysis.uuid = result_uuid
+    analysis.tools = tools
+    saveAnalysis(analysis)
+
+    # aggiunge l'analisi nella lista delle analisi per il progetto
+    project.analysis.append(analysis)
+    save(project)
+
+
+def update_analysis(analysisUuid):
+    # cerca l'analisi e aggiorna il numero di elaborazioni completate
+    # se corrispponde poi al numero di tool per quell'analisi, l'analisi diventa completed
+    analysis = get_analysis_by_uuid(analysisUuid)
+    completed_tools = analysis.completed_tools
+    completed_tools = completed_tools + 1
+
+    if completed_tools == analysis.tools:
+        analysis.status = 'COMPLETED'
+        analysis.completed_tools = completed_tools
+
+    saveAnalysis(analysis)
+
+
+def get_project_with_analysis_with_uuid(analysisUuid):
+    # cerca il progetto che possiede un'analisi con un determinato uuid
+    analysis = get_analysis_by_uuid(analysisUuid)
+    return get_project(analysis.project_id)

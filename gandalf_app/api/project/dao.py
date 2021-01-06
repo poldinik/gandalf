@@ -1,6 +1,6 @@
 from gandalf_app.database import db
 from gandalf_app import settings
-from gandalf_app.database.models import Project, UploadedMediaFile, UploadedDataFile
+from gandalf_app.database.models import Project, UploadedMediaFile, UploadedDataFile, Tool, Analysis
 
 
 def save(project):
@@ -42,6 +42,10 @@ def get_by_id(projectId):
     return Project.query.filter_by(id=projectId).first()
 
 
+def get_tool_by_id(toolId):
+    return Tool.query.filter_by(id=toolId).first()
+
+
 def get_media_by_id(mediaId):
     return UploadedMediaFile.query.filter_by(id=mediaId).first()
 
@@ -63,3 +67,13 @@ def removeMediaFromProject(project, media):
 def removeDataFromProject(project, data):
     project.additionalData.remove(data)
     db.session.commit()
+
+
+def saveAnalysis(analysis):
+    db.session.add(analysis)
+    db.session.commit()
+    return analysis
+
+
+def get_analysis_by_uuid(uuid):
+    return Analysis.query.filter_by(uuid=uuid).first()
