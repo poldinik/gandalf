@@ -14,5 +14,10 @@ def home():
     """Homepage."""
     return render_template('index.html')
 
+@home_bp.route('/sse', methods=['GET'])
+def home_sse():
+    """Homepage per prova sse"""
+    return render_template('sse.html')
+
 
 

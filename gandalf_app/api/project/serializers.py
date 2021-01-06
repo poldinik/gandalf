@@ -12,6 +12,12 @@ uploadedMediaFile = api.model('UploadedMediaFile', {
     # TODO:  thumbnail
 })
 
+analysis = api.model('Analysis', {
+    'id': fields.Integer(required=True, description='Analysis Id'),
+    'uuid': fields.String(required=True, description='Analysis uuid of result target folder'),
+    'status': fields.String(required=True, description='Analysis status of elaboration'),
+})
+
 uploadedDataFile = api.model('UploadedDataFile', {
     'id': fields.Integer(required=True, description='UploadedDataFile Id'),
     'fileName': fields.String(required=True, description='UploadedDataFile file name'),
@@ -47,6 +53,7 @@ project_details_response = api.model('ProjectDetails', {
     'status': fields.String(required=True, description='Project status'),
     'name': fields.String(required=True, description='Project name'),
     'location': fields.String(required=True, description='Project location'),
+    'analysis': fields.List(fields.Nested(analysis)),
     'probes': fields.List(fields.Nested(uploadedMediaFile)),
     'references': fields.List(fields.Nested(uploadedMediaFile)),
     'additionalData': fields.List(fields.Nested(uploadedDataFile)),

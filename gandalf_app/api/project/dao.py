@@ -1,6 +1,6 @@
 from gandalf_app.database import db
 from gandalf_app import settings
-from gandalf_app.database.models import Project, UploadedMediaFile, UploadedDataFile, Tool
+from gandalf_app.database.models import Project, UploadedMediaFile, UploadedDataFile, Tool, Analysis
 
 
 def save(project):
@@ -73,3 +73,7 @@ def saveAnalysis(analysis):
     db.session.add(analysis)
     db.session.commit()
     return analysis
+
+
+def get_analysis_by_uuid(uuid):
+    return Analysis.query.filter_by(uuid=uuid).first()

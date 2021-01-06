@@ -159,9 +159,15 @@ class Data(db.Model):
 class Analysis(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     uuid = db.Column(db.String())
+    status = db.Column(db.String())
+    tools = db.Column(db.Integer())
+    completed_tools = db.Column(db.Integer())
     project_id = db.Column(db.Integer, db.ForeignKey('project.id'))
 
     def __init__(self):
+        self.status = 'RUNNING'
+        self.tools = 0
+        self.completed_tools = 0
         pass
 
     def __repr__(self):
