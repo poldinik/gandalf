@@ -24,7 +24,7 @@ La definizione di specifiche in sede analisi requisiti, ha generato i seguenti a
 
 Nell'immagine sottostante una visione globale dell'architettura del progetto, tramite Package Diagram.
 
-![Gandalf Package Diagram](docs/GandalfPackageDiagram.jpg)
+![Gandalf Package Diagram](docs/GandalfPackageDiagram.png)
 
 Sono stati progettati due layer, identificati dai pricipali package quali: **api** e **database**. Il package api implementa il layer che espone **servizi RESTful** definiti secondo le specifiche OpenAPI; delegano 
 la responsabilità di implementare la loro business logic tramite script chiamati "business.py". Il package database implementa il layer della **persistenza dei dati**, utilizzando
