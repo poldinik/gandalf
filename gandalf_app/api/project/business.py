@@ -1,4 +1,4 @@
-from gandalf_app.database.models import Project, Media, UploadedMediaFile, UploadedDataFile, Analysis
+from gandalf_app.database.models import Project, UploadedMediaFile, UploadedDataFile, Analysis
 from gandalf_app.api.project.dao import save, get_all, get_by_id, saveMediaFile, saveDataFile, deleteProject, \
     get_media_by_id, removeMediaFromProject, get_data_by_id, removeDataFromProject, get_tool_by_id, saveAnalysis, \
     get_analysis_by_uuid
