@@ -34,8 +34,6 @@ class Project(db.Model):
     name = db.Column(db.String(50))
     location = db.Column(db.String(50))
     status = db.Column(db.Enum(ProjectStatus))  # enum list
-    data = db.relationship('Data', backref='owner_project')
-    media = db.relationship('Media', backref='owner_project')
     analysis = db.relationship('Analysis', backref='owner_project')
     probes = db.relationship('UploadedMediaFile', backref='owner_project')
     references = db.relationship('UploadedMediaFile', backref='owner_project_of_references')
@@ -45,8 +43,6 @@ class Project(db.Model):
     def __init__(self, name):
         self.name = name
         self.status = ProjectStatus.DRAFT
-        self.media = []
-        self.data = []
         self.analysis = []
         self.probes = []
         self.references = []
@@ -130,30 +126,6 @@ class Tool(db.Model):
 
     def __repr__(self):
         return '<Tool %r>' % self.name
-
-
-class Media(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(50))
-    project_id = db.Column(db.Integer, db.ForeignKey('project.id'))
-
-    def __init__(self, name):
-        self.name = name
-
-    def __repr__(self):
-        return '<Media %r>' % self.name
-
-
-class Data(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(50))
-    project_id = db.Column(db.Integer, db.ForeignKey('project.id'))
-
-    def __init__(self, name):
-        self.name = name
-
-    def __repr__(self):
-        return '<Data %r>' % self.name
 
 
 class Analysis(db.Model):
