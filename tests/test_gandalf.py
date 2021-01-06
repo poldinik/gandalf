@@ -132,6 +132,26 @@ def test_get_project_list(client):
            and responseToJson(responseList)[0]['status'] == 'ProjectStatus.DRAFT'
 
 
+# INTEGRATION TEST PER PROGETTO BY ID
+def test_get_project_by_id(client):
+    log.info("Lancio test per ottenere progetto by id")
+    authToken = getAuth(client)
+    mimetype = 'application/json'
+    headers = {
+        'Content-Type': mimetype,
+        'Authorization': authToken
+    }
+    data = {
+        'name': "progettodiprova",
+    }
+    createdResponse = client.post('/api/v1/projects/', data=json.dumps(data), headers=headers)
+    response = client.get('/api/v1/projects/' + str(responseToJson(createdResponse)['id']), headers=headers)
+    log.info(str(responseToJson(response)))
+    assert responseToJson(response)['name'] == 'progettodiprova' \
+           and responseToJson(response)['location'] == 'localhost:8888/api/v1/projects/1' \
+           and responseToJson(response)['status'] == 'ProjectStatus.DRAFT'
+
+
 # INTEGRATION TEST PER CARICAMENTO MEDIA FILE PER SPECIFICO PROGETTO, ROLE = PROBE
 def test_upload_media_probe_for_project(client):
     log.info("Lancio test per caricare un media per uno specifico progetto")
@@ -152,6 +172,9 @@ def test_upload_media_probe_for_project(client):
     )
     response = client.post(url, data=data, content_type='multipart/form-data')
     log.info(responseToJson(response))
+
+    responseById = client.get('/api/v1/projects/' + str(projectId), headers=headers)
+    log.info(responseToJson(responseById))
     assert response.status_code == 201
 
 
@@ -199,26 +222,6 @@ def test_upload_data_for_project(client):
     response = client.post(url, data=data, content_type='multipart/form-data')
     log.info(responseToJson(response))
     assert response.status_code == 201
-
-
-# INTEGRATION TEST PER PROGETTO BY ID
-def test_get_project_by_id(client):
-    log.info("Lancio test per ottenere progetto by id")
-    authToken = getAuth(client)
-    mimetype = 'application/json'
-    headers = {
-        'Content-Type': mimetype,
-        'Authorization': authToken
-    }
-    data = {
-        'name': "progettodiprova",
-    }
-    createdResponse = client.post('/api/v1/projects/', data=json.dumps(data), headers=headers)
-    response = client.get('/api/v1/projects/' + str(responseToJson(createdResponse)['id']), headers=headers)
-    log.info(str(responseToJson(response)))
-    assert responseToJson(response)['name'] == 'progettodiprova' \
-           and responseToJson(response)['location'] == 'localhost:8888/api/v1/projects/1' \
-           and responseToJson(response)['status'] == 'ProjectStatus.DRAFT'
 
 
 # INTEGRATION TEST PER ELIMINAZIONE PROGETTO
@@ -292,22 +295,22 @@ def test_delete_data_for_project(client):
 
 
 # INTEGRATION TEST PER START ANALYSIS
-def test_start_analysis_project(client):
-    log.info("Lancio test per lancio analisi")
-    authToken = getAuth(client)
-    mimetype = 'application/json'
-    headers = {
-        'Content-Type': mimetype,
-        'Authorization': authToken
-    }
-    data = {
-        'name': "progettodiprova",
-    }
-    createdResponse = client.post('/api/v1/projects/', data=json.dumps(data), headers=headers)
-    startResponse = client.post('/api/v1/projects/' + str(responseToJson(createdResponse)['id']) + '/start',
-                                headers=headers)
-    log.info(responseToJson(startResponse))
-    assert startResponse.status_code == 202
+# def test_start_analysis_project(client):
+#     log.info("Lancio test per lancio analisi")
+#     authToken = getAuth(client)
+#     mimetype = 'application/json'
+#     headers = {
+#         'Content-Type': mimetype,
+#         'Authorization': authToken
+#     }
+#     data = {
+#         'name': "progettodiprova",
+#     }
+#     createdResponse = client.post('/api/v1/projects/', data=json.dumps(data), headers=headers)
+#     startResponse = client.post('/api/v1/projects/' + str(responseToJson(createdResponse)['id']) + '/start?tools=1,2,3',
+#                                 headers=headers)
+#     log.info(responseToJson(startResponse))
+#     assert startResponse.status_code == 200
 
 
 # INTEGRATION TEST PER CREAZIONE NUOVO TOOL
@@ -323,6 +326,8 @@ def test_post_new_tool(client):
     data = {
         'name': "tool1",
         'description': "descrizione di prova",
+        'endpoint': 'http://localhost:8889/api/v1/jpegio',
+        'method': 'POST',
         'supportedDataTypes': ['IMAGE', 'VIDEO', 'AUDIO'],
         'supportedDataFormats': ['JPEG'],
         'references': [
@@ -348,6 +353,8 @@ def test_get_tools(client):
     data = {
         'name': "tool1",
         'description': "descrizione di prova",
+        'endpoint': 'http://localhost:8889/api/v1/tool1',
+        'method': 'POST',
         'supportedDataTypes': ['IMAGE', 'VIDEO', 'AUDIO'],
         'supportedDataFormats': ['JPEG'],
         'references': [
@@ -361,6 +368,8 @@ def test_get_tools(client):
     data2 = {
         'name': "tool1",
         'description': "descrizione di prova",
+        'endpoint': 'http://localhost:8889/api/v1/tool2',
+        'method': 'POST',
         'supportedDataTypes': ['IMAGE', 'VIDEO', 'AUDIO'],
         'supportedDataFormats': ['JPEG'],
         'references': [

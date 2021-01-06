@@ -75,6 +75,11 @@ result_details_response = api.model('ResultDetails', {
     'id': fields.Integer(required=True, description='Project Id'),
     'location': fields.String(required=True, description='Project location'),
     'name': fields.String(required=True, description='Project name'),
+    # probes
+    # toolId
+    # resultType
+    # dataType
+    # data
 })
 
 start_analysis_recepit_response = api.model('StartAnalysisRecepit', {

@@ -1,11 +1,12 @@
-from gandalf_app.database.models import Project, Media, UploadedMediaFile, UploadedDataFile
+from gandalf_app.database.models import Project, Media, UploadedMediaFile, UploadedDataFile, Analysis
 from gandalf_app.api.project.dao import save, get_all, get_by_id, saveMediaFile, saveDataFile, deleteProject, \
-    get_media_by_id, removeMediaFromProject, get_data_by_id, removeDataFromProject
+    get_media_by_id, removeMediaFromProject, get_data_by_id, removeDataFromProject, get_tool_by_id
 # from gandalf_app import settings
 from gandalf_app.settings import MULTIMEDIA_DIRECTORY
 import hashlib
 import os
 import uuid
+import requests
 
 
 def getUuid():
@@ -33,8 +34,8 @@ def get_projects():
     return get_all()
 
 
-def get_project(projecId):
-    return get_by_id(projecId)
+def get_project(projectId):
+    return get_by_id(projectId)
 
 
 def add_media_to_project(projectId, filename, role):
@@ -85,6 +86,14 @@ def deleteDataForProject(projectId, dataId):
     removeDataFromProject(project, data)
 
 
-def startAnalysis(projectId):
+def startAnalysis(projectId, toolId, folderUuid, result_path):
+    project = get_by_id(projectId)
+    tool = get_tool_by_id(toolId)
+    analysis = Analysis()
     analysisUuid = getUuid()
+    analysis.uuid = analysisUuid
+    # crea una cartella in MULTIMEDIA_DIRECTORY
+    project.analysis.append(analysis)
+    save(project)
+    # chiama un tool e genera un uuid
     return analysisUuid

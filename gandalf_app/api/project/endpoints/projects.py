@@ -6,7 +6,7 @@ from gandalf_app.api.project.serializers import project, project_created_respons
     media_receipt_response, project_details_response, start_analysis_recepit_response
 from gandalf_app.api.restplus import api
 from gandalf_app.api.project.business import post_project, get_project, get_projects, add_data_to_project, \
-    add_media_to_project, delete_project, deleteMediaForProject, deleteDataForProject, startAnalysis
+    add_media_to_project, delete_project, deleteMediaForProject, deleteDataForProject, startAnalysis, getUuid
 from gandalf_app.settings import MULTIMEDIA_DIRECTORY
 from flask import jsonify
 import os
@@ -15,6 +15,7 @@ from gandalf_app.auth.jwt_auth import auth
 from flask_restplus import reqparse
 import flask
 from .sse import announcer, format_sse
+from pathlib import Path
 
 logging_conf_path = os.path.normpath(os.path.join(os.path.dirname(__file__), '../../../../logging.conf'))
 logging.config.fileConfig(logging_conf_path)
@@ -107,11 +108,27 @@ class AnalysisStartForProjectResource(Resource):
         """
         Start an analysis.
         """
-        analysisUuid = startAnalysis(projectId)
-        response = {
-            'uuid': analysisUuid
-        }
-        return response, 202
+
+        # curl http://api.example.com -d "tools=1,2,3"
+        parser = reqparse.RequestParser()
+        parser.add_argument('tools', action='split')
+        args = parser.parse_args()
+        toolIds = args['tools']
+
+        log.info("Creazione cartella per risultati dell'analisi")
+        result_uuid = getUuid()
+        result_path = MULTIMEDIA_DIRECTORY + '/' + result_uuid + "_result_of_" + str(projectId)
+        Path(result_path).mkdir(parents=True, exist_ok=True)
+
+        for i in toolIds:
+            toolId = int(i)
+            # analysisUuid = startAnalysis(projectId, toolId, folderUuid, result_path)
+
+        # risposta con lista uuid dell'analisi?
+        # response = {
+        #     'uuid': analysisUuid
+        # }
+        return {}, 200
 
 
 @ns.route('/<int:projectId>/ping')

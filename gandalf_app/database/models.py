@@ -110,6 +110,8 @@ class Tool(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(50))
     description = db.Column(db.String())
+    endpoint = db.Column(db.String())
+    method = db.Column(db.String())
 
     # supportedDataTypes = db.ARRAY(db.String())
     # supportedDataFormats = db.ARRAY(db.String())
@@ -156,12 +158,11 @@ class Data(db.Model):
 
 class Analysis(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(50))
+    uuid = db.Column(db.String())
     project_id = db.Column(db.Integer, db.ForeignKey('project.id'))
-    result = db.relationship('Result', backref='owner_analysis')
 
-    def __init__(self, name):
-        self.name = name
+    def __init__(self):
+        pass
 
     def __repr__(self):
         return '<Analysis %r>' % self.name
