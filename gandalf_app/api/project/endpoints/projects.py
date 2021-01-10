@@ -104,7 +104,7 @@ class AnalysisStartForProjectResource(Resource):
     # @auth.login_required
     @ns.response(404, 'Not Found: the requested project has not been found.')
     @ns.response(500, 'Backend is not responding.')
-    @api.marshal_with(start_analysis_recepit_response)
+    #@api.marshal_with(start_analysis_recepit_response)
     def post(self, projectId):
         """
         Start an analysis for a project
@@ -120,17 +120,19 @@ class AnalysisStartForProjectResource(Resource):
         log.info("Creazione cartella per risultati dell'analisi")
         result_uuid = getUuid()
         result_path = MULTIMEDIA_DIRECTORY + '/' + result_uuid + "-" + str(projectId)
-        Path(result_path).mkdir(parents=True, exist_ok=True)
+        #Path(result_path).mkdir(parents=True, exist_ok=True)
 
         log.info("tools: " + str(len(toolIds)))
+        uuid_list = []
         for i in toolIds:
             toolId = int(i)
             log.info("Lancia analisi per il tool " + str(toolId))
-            startAnalysis(projectId, toolId, result_uuid, result_path, len(toolIds))
+            uuid_list.append(startAnalysis(projectId, toolId, result_uuid, result_path, len(toolIds)))
 
         # risposta con uuid dell'analisi lanciata
         response = {
-            'uuid': result_uuid
+            'projectId': projectId,
+            'uuid_list': uuid_list
         }
         return response, 200
 
@@ -138,10 +140,10 @@ class AnalysisStartForProjectResource(Resource):
 @ns.route('/<int:projectId>/ping')
 class AnalysisPingForProjectResource(Resource):
 
-    @auth.login_required
+    # @auth.login_required
     @ns.response(404, 'Not Found: the requested project has not been found.')
     @ns.response(500, 'Backend is not responding.')
-    def get(self, projectId):
+    def post(self, projectId):
         """
         Webhook per endpoint del tool per notificare lo stato di elaborazione
         """
@@ -150,6 +152,7 @@ class AnalysisPingForProjectResource(Resource):
         # upload_file_parser.add_argument('dataType', required=True)
         args = parser.parse_args()
         analysisUuid = args['uuid']
+        print("Ping ricevuto per analisi: " + str(analysisUuid))
         log.info("Aggiorna l'analisi")
         update_analysis(analysisUuid)
         msg = format_sse(data=analysisUuid)
