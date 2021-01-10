@@ -9,7 +9,7 @@ import os
 from werkzeug.utils import secure_filename
 from tool_example_app.auth.jwt_auth import auth
 from flask_restplus import reqparse
-# import jpegio as jio
+import jpegio as jio
 # import _thread
 import threading
 import time
@@ -41,10 +41,13 @@ class JpegIOResource(Resource):
         def run_tool():
             log.info("Running thread per elaborazione tool")
             # emula elaborazione tool
-            time.sleep(5)
-            # jpeg = jio.read("image.jpg")
-            # coef_array = jpeg.coef_arrays[0]
-            # quant_tbl = jpeg.quant_tables[0]
+            #time.sleep(5)
+            jpeg = jio.read("/Users/loretto/Downloads/jpegio/tests/images/arborgreens02.jpg")
+            coef_array = jpeg.coef_arrays[0]
+            quant_tbl = jpeg.quant_tables[0]
+
+            print(coef_array)
+            print(quant_tbl)
             #
             # # Modifying jpeg.coef_arrays...
             # # Modifying jpeg.quant_tables...
