@@ -97,7 +97,7 @@ Ogni metodo è annotato da un commento che descrive l'intento: i test sono esegu
 un oggetto **client** che si occupa di chiamare i servizi relativi alle funzionalità implementate. Al paragrafo **Test** del documento ([Gandalf](https://www.overleaf.com/read/kmzwgwkschkc)) è possibile accedere ad una descrizione 
 più specifica di come sono stati implementati i test di integrazione.
 
-Test SSE.
+Server Sent Event (Reactive Application)
 ----------
 
 Per fare una prova per verificare l'interazione con un tool eseguire i seguenti comandi 
