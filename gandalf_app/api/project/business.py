@@ -95,9 +95,9 @@ def startAnalysis(projectId, toolId, result_uuid, result_path, tools):
     tool_method = tool.method
 
     if tool_method == 'POST':
-        requests.post(tool_endpoint + 'uuid=' + str(result_uuid))
+        requests.post(tool_endpoint + '/?uuid=' + str(result_uuid) + '&projectId=' + str(projectId))
     else:
-        requests.get(tool_endpoint + 'uuid=' + str(result_uuid))
+        requests.get(tool_endpoint + '/?uuid=' + str(result_uuid) + '&projectId=' + str(projectId))
 
     # crea un'analisi su db
     analysis = Analysis()
@@ -108,6 +108,7 @@ def startAnalysis(projectId, toolId, result_uuid, result_path, tools):
     # aggiunge l'analisi nella lista delle analisi per il progetto
     project.analysis.append(analysis)
     save(project)
+    return result_uuid
 
 
 def update_analysis(analysisUuid):

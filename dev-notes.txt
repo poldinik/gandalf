@@ -20,3 +20,10 @@ python /Users/loretto/Downloads/jpegio/setup.py install
 in tool non c'è l'endpoint
 
 andrebbe visualizzata lista delle analisi
+
+#installazione jpegio
+
+1) andare nella cartella jpegio ed eseguire
+
+/Users/loretto/PycharmProjects/gandalf/venv/bin/python setup.py install
+
