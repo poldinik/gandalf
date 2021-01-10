@@ -97,7 +97,7 @@ Ogni metodo è annotato da un commento che descrive l'intento: i test sono esegu
 un oggetto **client** che si occupa di chiamare i servizi relativi alle funzionalità implementate. Al paragrafo **Test** del documento ([Gandalf](https://www.overleaf.com/read/kmzwgwkschkc)) è possibile accedere ad una descrizione 
 più specifica di come sono stati implementati i test di integrazione.
 
-Test SSE
+Test SSE.
 ----------
 
 Per fare una prova per verificare l'interazione con un tool eseguire i seguenti comandi 
@@ -108,15 +108,15 @@ Eseguire:
     sh tool_serve.sh
     sh create_mock.sh
     
-
-
 I comandi lanceranno rispettivamente il server Gandalf, un server che incapsula un tool di prova e una serie di chiamate per creare dati di mock.
 il comando create_mock.sh termina con il lancio di un'analisi. Collegandosi alla pagina localhost:8888/sse e lanciando poi create_mock.sh è possibile 
-visualizzare la modalità reactive dell'applicazione: gandalf lancia un'analisi chiamando il tool esterno, il quale lancia all'interno di un thread il tool 
+visualizzare la modalità **reactive** dell'applicazione: Gandalf lancia un'analisi chiamando il tool esterno, il quale lancia all'interno di un thread il tool 
 in modo asincrono, non bloccando l'applicazione. Al termine dell'elaborazione, il server del tool chiamerà Gandalf tramite opportuno endpoint per 
 notificare il termine dell'elaborazione. La pagina /sse contiene uno script javascript per una connessione tramite event source, la quale si aggancia ad un 
 endpoint che emette eventi Server Sent. In questo modo Gandalf notificherà in modo asincrono al browser il termine dell'elaborazione senza che l'utente 
-debba necessariamente fare refresh della pagina per monitorare lo stato dell'analisi lanciata in precedenza
+debba necessariamente fare refresh della pagina per monitorare lo stato dell'analisi lanciata in precedenza.
+
+![SSE](docs/sse.png)
 
 Settings
 ----------
