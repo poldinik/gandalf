@@ -42,13 +42,13 @@ class JpegIOResource(Resource):
         def run_tool():
             log.info("Running thread per elaborazione tool")
             # emula elaborazione tool
-            # time.sleep(5)
-            jpeg = jio.read("/Users/loretto/Downloads/jpegio/tests/images/arborgreens02.jpg")
-            coef_array = jpeg.coef_arrays[0]
-            quant_tbl = jpeg.quant_tables[0]
+            time.sleep(5)
+            #jpeg = jio.read("/Users/loretto/Downloads/jpegio/tests/images/arborgreens02.jpg")
+            #coef_array = jpeg.coef_arrays[0]
+            #quant_tbl = jpeg.quant_tables[0]
 
-            print(coef_array)
-            print(quant_tbl)
+            #print(coef_array)
+            #print(quant_tbl)
             #
             # # Modifying jpeg.coef_arrays...
             # # Modifying jpeg.quant_tables...
