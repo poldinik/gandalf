@@ -53,6 +53,7 @@ class Project(db.Model):
         return '<Project %r>' % self.name
 
 
+
 class UploadedMediaFile(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     fileName = db.Column(db.String(50))

@@ -121,7 +121,7 @@ debba necessariamente fare refresh della pagina per monitorare lo stato dell'ana
 Settings
 ----------
 
-Nel caso ci sia la necessità di **modificare alcune variabili d'ambiente**, come directory dove vengono caricati i file o il dominio su cui gira l'applicazione, modificare il file **gandalf_app/settings.pyt**
+Nel caso ci sia la necessità di **modificare alcune variabili d'ambiente**, come directory dove vengono caricati i file o il dominio su cui gira l'applicazione, modificare il file **gandalf_app/settings.py**
 
 Links
 -----

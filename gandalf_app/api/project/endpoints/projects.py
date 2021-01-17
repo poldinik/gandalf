@@ -50,14 +50,12 @@ class ProjectsManagementResource(Resource):
 
     @auth.login_required
     @api.marshal_with(project_created_response)
-    # @api.doc(tags=['Project management'])
     @ns.response(500, 'Backend is not responding.')
     def get(self):
         """
         Obtain the list of available projects.
         """
         projects = get_projects()
-        print("progetti recuperati: " + str(len(list(projects))))
         return projects, 200
 
     @auth.login_required
