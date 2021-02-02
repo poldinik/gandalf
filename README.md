@@ -52,6 +52,12 @@ Ricapitolando e facendo riferimento anche ai badge riportati nell'header di ques
 * pip
 * virtualenv
 
+# Dipendenze Linux
+
+Nel caso si utilizzi una macchina **linux**, verificare la presenza della dipendenza **jq**. Per installarla:
+
+`sudo apt-get install jq`
+
 
 Installazione
 ----------
@@ -69,6 +75,10 @@ gestione delle dipendenze.
 Dev Mode
 ----------
 
+La modalità **dev** è la modalità utilizzata dalla liberia Flask per permettere lo sviluppo dell'applicazione con capacità di 
+**hot reload**, ovvero la ricompilazione automatica del codice dopo modifica. Tale modalità non è idonea per la messa in produzione del codice,
+ma serve solo in fase di sviluppo e per lanciarla sulla propria macchina.
+
 Eseguire:
 
     sh app_serve.sh
@@ -82,7 +92,7 @@ Attraverso il comando
 è possibile lanciare un server che incapsula il tool jpegio. Tale tool è stato utilizzato per implementare un esempio di tool esposto tramite servizio REST con con cui Gandalf può interagire.
 Tramite Gandalf è possibile lanciare un'analisi per un determinato progetto e tramite un endpoint SSE è possibile monitorare lo stato dell'elaborazione, fornendo un sistema di notifica reactive che aumenta
 la user experience.
-
+Il lancio del server del tool è un'applicazione rest lanciata una modalità `dev`, ovvero un'applicazione separata da **Gandalf**.
 Test
 ----------
 
@@ -122,6 +132,8 @@ Settings
 ----------
 
 Nel caso ci sia la necessità di **modificare alcune variabili d'ambiente**, come directory dove vengono caricati i file o il dominio su cui gira l'applicazione, modificare il file **gandalf_app/settings.py**
+In particolare la variabile **MULTIMEDIA_DIRECTORY** punta correntemente al progetto stesso. I risultati delle elaborazioni verranno perciò salvati in cartelle con denominazione univoca all'interno del path a cui MULTIMEDIA_DIRECTORY punta.
+Modificare questa variabile (sia nei settings del progetto **gandalf** che nei settings del progetto **tool_example_app**) per modificare il path dove raccogliere i risultati.
 
 Links
 -----

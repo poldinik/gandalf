@@ -15,13 +15,15 @@ import threading
 import time
 import traceback
 import requests
+import pickle
+import uuid
 
 logging_conf_path = os.path.normpath(os.path.join(os.path.dirname(__file__), '../../../../logging.conf'))
 logging.config.fileConfig(logging_conf_path)
 log = logging.getLogger(__name__)
 
 ns = api.namespace('jpegio', description='Jpeg IO tool')
-
+IMAGE = "/Users/loretto/Downloads/jpegio/tests/images/arborgreens02.jpg"
 
 @ns.route('/')
 class JpegIOResource(Resource):
@@ -41,20 +43,19 @@ class JpegIOResource(Resource):
 
         def run_tool():
             log.info("Running thread per elaborazione tool")
-            # emula elaborazione tool
-            time.sleep(5)
-            #jpeg = jio.read("/Users/loretto/Downloads/jpegio/tests/images/arborgreens02.jpg")
-            #coef_array = jpeg.coef_arrays[0]
-            #quant_tbl = jpeg.quant_tables[0]
+            jpeg = jio.read(IMAGE)
+            coef_array = jpeg.coef_arrays[0]
+            quant_tbl = jpeg.quant_tables[0]
 
-            #print(coef_array)
-            #print(quant_tbl)
-            #
-            # # Modifying jpeg.coef_arrays...
-            # # Modifying jpeg.quant_tables...
-            #
-            # jio.write(jpeg, "image_modified.jpg")
-            # TODO: salva risultati in opportuna directory
+            result = []
+            result.append(coef_array)
+            result.append(quant_tbl)
+            # salva risultati in opportuna directory
+            result_path = MULTIMEDIA_DIRECTORY + '/' + analysisUuid + "-" + str(projectId)
+
+            with open(result_path + '/' + 'data-' + str(uuid.uuid4()) + '.pkl', 'wb') as output:
+                pickle.dump(result, output, pickle.HIGHEST_PROTOCOL)
+
             print('Invio ping di completamento analisi')
             gandalf_endpoint = 'http://localhost:8888/api/v1/projects/' + str(projectId) + '/ping?uuid=' + str(analysisUuid)
             requests.post(gandalf_endpoint)

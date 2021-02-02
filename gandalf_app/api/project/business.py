@@ -129,3 +129,11 @@ def get_project_with_analysis_with_uuid(analysisUuid):
     # cerca il progetto che possiede un'analisi con un determinato uuid
     analysis = get_analysis_by_uuid(analysisUuid)
     return get_project(analysis.project_id)
+
+
+def get_result(projectId, resultId):
+    project = get_by_id(projectId)
+
+    #for a in project.analysis:
+
+    pass

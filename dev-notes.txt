@@ -13,6 +13,7 @@ tramite quel uuid il tool poi lo ripassa al webhook
 
 per installare jpegio
 
+
 python /Users/loretto/Downloads/jpegio/setup.py install
 
  pip install /Users/loretto/Downloads/jpegio/dist/jpegio-0.2.1-cp37-cp37m-macosx_10_7_x86_64.whl
@@ -27,3 +28,10 @@ andrebbe visualizzata lista delle analisi
 
 /Users/loretto/PycharmProjects/gandalf/venv/bin/python setup.py install
 
+
+Errore registrazione blueprint
+
+# ValueError: flask-restplus blueprints can only be registered once.
+# questo perchè la configurazione della app tramite conftest inizializza la app più volte? Andrebe fatto una volta sola
+# soluzione è mettere app app scoped in app.py e non chiamare ogni volta initialize sennò fa binding ogni volta del blueprint
+# e blueprint può ovviamente essere attaccato una volta sola

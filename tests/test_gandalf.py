@@ -71,10 +71,7 @@ def test_register_login(client):
     assert registerResponse.status_code == 200 and loginResponse.status_code == 200
 
 
-# ValueError: flask-restplus blueprints can only be registered once.
-# questo perchè la configurazione della app tramite conftest inizializza la app più volte? Andrebe fatto una volta sola
-# soluzione è mettere app app scoped in app.py e non chiamare ogni volta initialize sennò fa binding ogni volta del blueprint
-# e blueprint può ovviamente essere attaccato una volta sola
+# INTEGRATION TEST PER VERIFICA DELLA PRESENZA della root url
 def test_root_url(client):
     log.info("Lancio test per base route")
     authToken = getAuth(client)

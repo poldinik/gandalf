@@ -7,7 +7,7 @@ from gandalf_app.api.project.serializers import project, project_created_respons
 from gandalf_app.api.restplus import api
 from gandalf_app.api.project.business import post_project, get_project, get_projects, add_data_to_project, \
     add_media_to_project, delete_project, deleteMediaForProject, deleteDataForProject, startAnalysis, getUuid, \
-    update_analysis, get_project_with_analysis_with_uuid
+    update_analysis, get_project_with_analysis_with_uuid, get_result
 from gandalf_app.settings import MULTIMEDIA_DIRECTORY
 from flask import jsonify
 import os
@@ -118,7 +118,9 @@ class AnalysisStartForProjectResource(Resource):
         log.info("Creazione cartella per risultati dell'analisi")
         result_uuid = getUuid()
         result_path = MULTIMEDIA_DIRECTORY + '/' + result_uuid + "-" + str(projectId)
-        #Path(result_path).mkdir(parents=True, exist_ok=True)
+        # Crea una cartella per il risultato, in modo che i dati dei risultati vengano salvati nella cartella
+        # senza dover passarli via network
+        Path(result_path).mkdir(parents=True, exist_ok=True)
 
         log.info("tools: " + str(len(toolIds)))
         uuid_list = []
@@ -312,8 +314,10 @@ class SingleDataFilesManagementResource(Resource):
 @ns.route('/<int:projectId>/results/<int:resultId>')
 class ResultInspectionResource(Resource):
 
+    @ns.response(404, 'Not Found: the requested project has not been found.')
+    @ns.response(500, 'Backend is not responding.')
     def get(self, projectId, resultId):
         """
         Obtain a result's data.
         """
-        return None, 200
+        return get_result(projectId, resultId), 200
