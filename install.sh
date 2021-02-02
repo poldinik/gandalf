@@ -14,6 +14,9 @@ function install() {
   _out virtualenv activate...
   source venv/bin/activate
   pip install -r requirements.txt
+  cd jpegio
+  python setup.py install
+  cd ..
   python setup.py develop
   _out virtualenv deactivate...
   deactivate
