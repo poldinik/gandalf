@@ -52,7 +52,7 @@ Ricapitolando e facendo riferimento anche ai badge riportati nell'header di ques
 * pip
 * virtualenv
 
-# Dipendenze Linux
+**Dipendenze Linux**
 
 Nel caso si utilizzi una macchina **linux**, verificare la presenza della dipendenza **jq**. Per installarla:
 
@@ -93,6 +93,7 @@ Attraverso il comando
 Tramite Gandalf è possibile lanciare un'analisi per un determinato progetto e tramite un endpoint SSE è possibile monitorare lo stato dell'elaborazione, fornendo un sistema di notifica reactive che aumenta
 la user experience.
 Il lancio del server del tool è un'applicazione rest lanciata una modalità `dev`, ovvero un'applicazione separata da **Gandalf**.
+
 Test
 ----------
 
