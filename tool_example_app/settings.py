@@ -15,10 +15,8 @@ SQLALCHEMY_DATABASE_URI = 'sqlite:///db.sqlite'
 SQLALCHEMY_TRACK_MODIFICATIONS = False
 
 # DIRECTORY per Multimedia caricati
-# MULTIMEDIA_DIRECTORY = '/Users/loretto/Desktop/'
-#MULTIMEDIA_DIRECTORY = os.path.dirname(os.path.realpath(__file__))
-
-MULTIMEDIA_DIRECTORY = '/Users/loretto/PycharmProjects/gandalf/gandalf_app/'
+MULTIMEDIA_DIRECTORY = os.path.dirname(os.path.realpath(__file__)) + '/../gandalf_app'
+#MULTIMEDIA_DIRECTORY = '/Users/loretto/PycharmProjects/gandalf/gandalf_app/'
 
 # API version
 API_VERSION = 1

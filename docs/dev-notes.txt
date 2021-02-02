@@ -35,3 +35,8 @@ Errore registrazione blueprint
 # questo perchè la configurazione della app tramite conftest inizializza la app più volte? Andrebe fatto una volta sola
 # soluzione è mettere app app scoped in app.py e non chiamare ogni volta initialize sennò fa binding ogni volta del blueprint
 # e blueprint può ovviamente essere attaccato una volta sola
+
+# link utile per esempio testing
+# https://nikgrozev.com/2018/10/12/python-api-with-flask-and-flask-restplus/
+
+# tramite pytest-flask si crea automaticamente un cliente (teoricamente)
