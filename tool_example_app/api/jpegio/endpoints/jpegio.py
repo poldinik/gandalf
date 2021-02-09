@@ -51,9 +51,9 @@ class JpegIOResource(Resource):
             result.append(coef_array)
             result.append(quant_tbl)
             # salva risultati in opportuna directory
-            result_path = MULTIMEDIA_DIRECTORY + '/' + analysisUuid + "-" + str(projectId)
+            result_path = MULTIMEDIA_DIRECTORY + '/' + analysisUuid + "/" + str(projectId)
 
-            with open(result_path + '/' + 'data-' + str(uuid.uuid4()) + '.pkl', 'wb') as output:
+            with open(result_path + '/' + 'result-' + str(uuid.uuid4()) + '.pkl', 'wb') as output:
                 pickle.dump(result, output, pickle.HIGHEST_PROTOCOL)
 
             print('Invio ping di completamento analisi')

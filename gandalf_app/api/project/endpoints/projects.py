@@ -3,7 +3,7 @@ import logging.config
 from flask import request
 from flask_restplus import Resource
 from gandalf_app.api.project.serializers import project, project_created_response, project_recepit_response, \
-    media_receipt_response, project_details_response, start_analysis_recepit_response
+    media_receipt_response, project_details_response, start_analysis_recepit_response, result_details_response
 from gandalf_app.api.restplus import api
 from gandalf_app.api.project.business import post_project, get_project, get_projects, add_data_to_project, \
     add_media_to_project, delete_project, deleteMediaForProject, deleteDataForProject, startAnalysis, getUuid, \
@@ -117,7 +117,7 @@ class AnalysisStartForProjectResource(Resource):
 
         log.info("Creazione cartella per risultati dell'analisi")
         result_uuid = getUuid()
-        result_path = MULTIMEDIA_DIRECTORY + '/' + result_uuid + "-" + str(projectId)
+        result_path = MULTIMEDIA_DIRECTORY + '/' + result_uuid + "/" + str(projectId)
         # Crea una cartella per il risultato, in modo che i dati dei risultati vengano salvati nella cartella
         # senza dover passarli via network
         Path(result_path).mkdir(parents=True, exist_ok=True)
@@ -316,6 +316,7 @@ class ResultInspectionResource(Resource):
 
     @ns.response(404, 'Not Found: the requested project has not been found.')
     @ns.response(500, 'Backend is not responding.')
+    #@api.marshal_with(result_details_response)
     def get(self, projectId, resultId):
         """
         Obtain a result's data.

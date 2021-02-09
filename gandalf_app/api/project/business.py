@@ -1,4 +1,4 @@
-from gandalf_app.database.models import Project, UploadedMediaFile, UploadedDataFile, Analysis
+from gandalf_app.database.models import Project, UploadedMediaFile, UploadedDataFile, Analysis, ResultDetails
 from gandalf_app.api.project.dao import save, get_all, get_by_id, saveMediaFile, saveDataFile, deleteProject, \
     get_media_by_id, removeMediaFromProject, get_data_by_id, removeDataFromProject, get_tool_by_id, saveAnalysis, \
     get_analysis_by_uuid
@@ -8,6 +8,7 @@ import hashlib
 import os
 import uuid
 import requests
+import pickle
 
 
 def getUuid():
@@ -121,6 +122,7 @@ def update_analysis(analysisUuid):
     if completed_tools == analysis.tools:
         analysis.status = 'COMPLETED'
         analysis.completed_tools = completed_tools
+        project_id = analysis.project_id
 
     saveAnalysis(analysis)
 
@@ -134,6 +136,34 @@ def get_project_with_analysis_with_uuid(analysisUuid):
 def get_result(projectId, resultId):
     project = get_by_id(projectId)
 
-    #for a in project.analysis:
+    resultDetails = ResultDetails('risultatoTest')
 
-    pass
+    with open(
+            '/Users/loretto/PycharmProjects/gandalf/gandalf_app/c486077a-532a-432c-a01d-1c252d75a289/1/result-2204a851-5f00-41ee-bf63-b09d67208d43.pkl',
+            'rb') as input:
+        data = pickle.load(input)
+
+    if len(data) > 0:
+        dataList = [d.tolist() for d in data]
+    else:
+        dataList = []
+
+    #resultDetails.data = dataList[0]
+
+    #id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    # location = db.Column(db.String())
+    # probes = db.Column(db.PickleType())
+    # toolId = db.Column(db.Integer())
+    # name = db.Column(db.String())
+    # resultType = db.Column(db.Enum(ResultType))
+    # project_id = db.Column(db.Integer, db.ForeignKey('project.id'))
+    # dataType = db.Column(db.String, db.ForeignKey('project.id'))
+    return {
+        'id': resultId,
+        'location': '',
+        'probes': [],
+        'toolId': 1,
+        'resultType': 'MULTI',
+        'dataType': 'matrix',
+        'data': dataList
+    }

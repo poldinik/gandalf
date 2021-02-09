@@ -16,6 +16,7 @@ function install() {
   pip install -r requirements.txt
   cd jpegio
   python setup.py install
+  rm -rf tests
   cd ..
   python setup.py develop
   _out virtualenv deactivate...

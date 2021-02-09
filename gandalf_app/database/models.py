@@ -53,7 +53,6 @@ class Project(db.Model):
         return '<Project %r>' % self.name
 
 
-
 class UploadedMediaFile(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     fileName = db.Column(db.String(50))
@@ -65,7 +64,6 @@ class UploadedMediaFile(db.Model):
 
     def __init__(self, fileName):
         self.fileName = fileName
-
 
     def __repr__(self):
         return '<UploadedMediaFile %r>' % self.fileName
@@ -94,6 +92,25 @@ class ResultSummary(db.Model):
     name = db.Column(db.String())
     resultType = db.Column(db.Enum(ResultType))
     project_id = db.Column(db.Integer, db.ForeignKey('project.id'))
+
+    def __init__(self, name):
+        self.name = name
+        self.probes = []
+
+    def __repr__(self):
+        return '<ResultSummary %r>' % self.name
+
+
+class ResultDetails(db.Model):
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    location = db.Column(db.String())
+    probes = db.Column(db.PickleType())
+    toolId = db.Column(db.Integer())
+    name = db.Column(db.String())
+    resultType = db.Column(db.Enum(ResultType))
+    project_id = db.Column(db.Integer, db.ForeignKey('project.id'))
+    dataType = db.Column(db.String, db.ForeignKey('project.id'))
+    data = db.Column(db.PickleType())
 
     def __init__(self, name):
         self.name = name
