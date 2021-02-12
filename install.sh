@@ -16,7 +16,7 @@ function install() {
   pip install -r requirements.txt
   cd jpegio
   python setup.py install
-  rm -rf tests
+  rm -rf tests #elimina la cartella test del tool jpegio per conflitto nel lancio di test.sh
   cd ..
   python setup.py develop
   _out virtualenv deactivate...

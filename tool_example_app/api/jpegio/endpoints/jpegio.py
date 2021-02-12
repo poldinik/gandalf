@@ -37,8 +37,10 @@ class JpegIOResource(Resource):
         parser = reqparse.RequestParser()
         parser.add_argument('uuid')
         parser.add_argument('projectId')
+        parser.add_argument('analysis_uuid')
         args = parser.parse_args()
-        analysisUuid = args['uuid']
+        result_uuid = args['uuid']
+        analysis_uuid = args['analysis_uuid']
         projectId = args['projectId']
 
         def run_tool():
@@ -51,13 +53,14 @@ class JpegIOResource(Resource):
             result.append(coef_array)
             result.append(quant_tbl)
             # salva risultati in opportuna directory
-            result_path = MULTIMEDIA_DIRECTORY + '/' + analysisUuid + "/" + str(projectId)
+            result_path = MULTIMEDIA_DIRECTORY + '/' + result_uuid
 
             with open(result_path + '/' + 'result-' + str(uuid.uuid4()) + '.pkl', 'wb') as output:
                 pickle.dump(result, output, pickle.HIGHEST_PROTOCOL)
 
+            time.sleep(5)
             print('Invio ping di completamento analisi')
-            gandalf_endpoint = 'http://localhost:8888/api/v1/projects/' + str(projectId) + '/ping?uuid=' + str(analysisUuid)
+            gandalf_endpoint = 'http://localhost:8888/api/v1/projects/' + str(projectId) + '/ping?analysis_uuid=' + str(analysis_uuid)
             requests.post(gandalf_endpoint)
             print('Elaborazione finita!')
         try:

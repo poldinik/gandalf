@@ -7,7 +7,7 @@ from gandalf_app.api.project.serializers import project, project_created_respons
 from gandalf_app.api.restplus import api
 from gandalf_app.api.project.business import post_project, get_project, get_projects, add_data_to_project, \
     add_media_to_project, delete_project, deleteMediaForProject, deleteDataForProject, startAnalysis, getUuid, \
-    update_analysis, get_project_with_analysis_with_uuid, get_result
+    update_elaboration, get_project_with_analysis_with_uuid, get_result, create_result_scaffold
 from gandalf_app.settings import MULTIMEDIA_DIRECTORY
 from flask import jsonify
 import os
@@ -102,7 +102,7 @@ class AnalysisStartForProjectResource(Resource):
     # @auth.login_required
     @ns.response(404, 'Not Found: the requested project has not been found.')
     @ns.response(500, 'Backend is not responding.')
-    #@api.marshal_with(start_analysis_recepit_response)
+    # @api.marshal_with(start_analysis_recepit_response)
     def post(self, projectId):
         """
         Start an analysis for a project
@@ -117,22 +117,19 @@ class AnalysisStartForProjectResource(Resource):
 
         log.info("Creazione cartella per risultati dell'analisi")
         result_uuid = getUuid()
-        result_path = MULTIMEDIA_DIRECTORY + '/' + result_uuid + "/" + str(projectId)
+        result_path = MULTIMEDIA_DIRECTORY + '/' + result_uuid
         # Crea una cartella per il risultato, in modo che i dati dei risultati vengano salvati nella cartella
         # senza dover passarli via network
         Path(result_path).mkdir(parents=True, exist_ok=True)
 
         log.info("tools: " + str(len(toolIds)))
-        uuid_list = []
-        for i in toolIds:
-            toolId = int(i)
-            log.info("Lancia analisi per il tool " + str(toolId))
-            uuid_list.append(startAnalysis(projectId, toolId, result_uuid, result_path, len(toolIds)))
 
-        # risposta con uuid dell'analisi lanciata
+        uuid_list = create_result_scaffold(projectId, toolIds, result_uuid, result_path)
+
         response = {
             'projectId': projectId,
-            'uuid_list': uuid_list
+            'uuid': result_uuid,
+            'analysis_uuid_list': uuid_list
         }
         return response, 200
 
@@ -148,13 +145,13 @@ class AnalysisPingForProjectResource(Resource):
         Webhook per endpoint del tool per notificare lo stato di elaborazione
         """
         parser = reqparse.RequestParser()
-        parser.add_argument('uuid')
+        parser.add_argument('analysis_uuid')
         # upload_file_parser.add_argument('dataType', required=True)
         args = parser.parse_args()
-        analysisUuid = args['uuid']
+        analysisUuid = args['analysis_uuid']
         print("Ping ricevuto per analisi: " + str(analysisUuid))
         log.info("Aggiorna l'analisi")
-        update_analysis(analysisUuid)
+        update_elaboration(analysisUuid)
         msg = format_sse(data=analysisUuid)
         announcer.announce(msg=msg)
         return {}, 200
@@ -163,17 +160,12 @@ class AnalysisPingForProjectResource(Resource):
 @ns.route('/<int:projectId>/listen')
 class AnalysisListenForProjectResource(Resource):
 
-    # @auth.login_required
     @ns.response(404, 'Not Found: the requested project has not been found.')
     @ns.response(500, 'Backend is not responding.')
     def get(self, projectId):
         """
-        SSE reactive verso il client per stato elaborazione analisi
+        SSE reactive verso il client per stato elaborazione di ogni analisi lanciata. É stream di analysis uuid.
         """
-        parser = reqparse.RequestParser()
-        parser.add_argument('uuid')
-        args = parser.parse_args()
-        analysisUuid = args['uuid']
 
         def stream():
             messages = announcer.listen()  # ritorna un queue.Queue
@@ -187,7 +179,6 @@ class AnalysisListenForProjectResource(Resource):
 @ns.route('/analysis')
 class ProjectWithAnalysisResource(Resource):
 
-    # @auth.login_required
     @ns.response(404, 'Not Found: the requested project has not been found.')
     @ns.response(500, 'Backend is not responding.')
     @api.marshal_with(project_details_response)
@@ -196,9 +187,9 @@ class ProjectWithAnalysisResource(Resource):
         Ottiene il progetto che possiede una analisi con un certo uuid
         """
         parser = reqparse.RequestParser()
-        parser.add_argument('uuid', required=True)
+        parser.add_argument('analysis_uuid', required=True)
         args = parser.parse_args()
-        analysisUuid = args['uuid']
+        analysisUuid = args['analysis_uuid']
 
         return get_project_with_analysis_with_uuid(analysisUuid), 200
 
@@ -316,7 +307,7 @@ class ResultInspectionResource(Resource):
 
     @ns.response(404, 'Not Found: the requested project has not been found.')
     @ns.response(500, 'Backend is not responding.')
-    #@api.marshal_with(result_details_response)
+    # @api.marshal_with(result_details_response)
     def get(self, projectId, resultId):
         """
         Obtain a result's data.
