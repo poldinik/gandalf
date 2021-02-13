@@ -101,7 +101,7 @@ N.B: i file generati dai test verranno creati nella stessa cartella del progetto
 
 Eseguire:
 
-    sh test.sh
+    bash test.sh
     
 Lo script avvierà una pipeline per integration test relativi agli endpoint esposti dal servizio. Ogni nome di un metodo di test comincia per **test_**, per convienzione libreria pytest.
 Ogni metodo è annotato da un commento che descrive l'intento: i test sono eseguiti tramite libreria **pytest**, fornendo a runtime un'istanza dell'applicazione e generando
@@ -115,9 +115,9 @@ Per fare una prova per verificare l'interazione con un tool eseguire i seguenti 
 
 Eseguire:
 
-    sh app_serve.sh
-    sh tool_serve.sh
-    sh create_mock.sh
+    bash app_serve.sh
+    bash tool_serve.sh
+    bash create_mock.sh
     
 I comandi lanceranno rispettivamente:
 
@@ -139,7 +139,7 @@ Nel sequence diagram è possibile visualizzare l'interazione tra client, Gandalf
 per ogni tool specificato nella richiesta, Gandalf invierà una richiesta di analisi per ogni file probe del progetto. Al termine dell'esecuzione asincrona di ogni analisi, Gandalf riceverà notifica tramite specifici endpoint di callback, alimentando
 uno stream di notifiche server sent verso il Client.
 
-Data un'elaborazione con **T** tool e **P** file di probe, Gandalf invierà così **N = T x P** richieste verso tool esterni, producendo un risultato per ogni elaborazione. Ogni elaborazione manterrà su disco i risultati binari di ogni analisi tramite formato **.pkl**
+Data un'elaborazione con **T** tool e **P** file di probe, Gandalf invierà così **N = T x P** richieste verso tool esterni, producendo un risultato per ogni elaborazione. Ogni elaborazione manterrà su disco i risultati binari di ogni analisi tramite formato **.pkl**.
 
 ![SSE](docs/sse.png)
 
