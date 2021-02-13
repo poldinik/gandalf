@@ -136,8 +136,10 @@ endpoint che emette eventi **Server Sent**. In questo modo Gandalf notificherà 
 debba necessariamente fare refresh della pagina per monitorare lo stato delle analisi lanciate in precedenza.
 
 Nel sequence diagram è possibile visualizzare l'interazione tra client, Gandalf e tool esterno. Il client invia una richiesta di lancio elaborazione per uno specifico progetto;
-Per ogni toolId specificato nella richiesta, Gandalf invierà una richiesta di analisi per ogni file probe del progetto. AL termine dell'esecuzione asincrona di ogni analisi, Gandalf riceverà notifica tramite specifici endpoint di callback, alimentando
+per ogni tool specificato nella richiesta, Gandalf invierà una richiesta di analisi per ogni file probe del progetto. Al termine dell'esecuzione asincrona di ogni analisi, Gandalf riceverà notifica tramite specifici endpoint di callback, alimentando
 uno stream di notifiche server sent verso il Client.
+
+Data un'elaborazione con **T** tool e **P** file di probe, Gandalf invierà così **N = T x P** richieste verso tool esterni, producendo un risultato per ogni elaborazione.
 
 ![SSE](docs/sse.png)
 
