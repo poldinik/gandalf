@@ -139,7 +139,7 @@ Nel sequence diagram è possibile visualizzare l'interazione tra client, Gandalf
 per ogni tool specificato nella richiesta, Gandalf invierà una richiesta di analisi per ogni file probe del progetto. Al termine dell'esecuzione asincrona di ogni analisi, Gandalf riceverà notifica tramite specifici endpoint di callback, alimentando
 uno stream di notifiche server sent verso il Client.
 
-Data un'elaborazione con **T** tool e **P** file di probe, Gandalf invierà così **N = T x P** richieste verso tool esterni, producendo un risultato per ogni elaborazione.
+Data un'elaborazione con **T** tool e **P** file di probe, Gandalf invierà così **N = T x P** richieste verso tool esterni, producendo un risultato per ogni elaborazione. Ogni elaborazione manterrà su disco i risultati binari di ogni analisi tramite formato **.pkl**
 
 ![SSE](docs/sse.png)
 
