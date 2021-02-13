@@ -15,12 +15,16 @@ import threading
 import time
 import traceback
 import requests
+import pickle
+import uuid
 
 logging_conf_path = os.path.normpath(os.path.join(os.path.dirname(__file__), '../../../../logging.conf'))
 logging.config.fileConfig(logging_conf_path)
 log = logging.getLogger(__name__)
 
 ns = api.namespace('jpegio', description='Jpeg IO tool')
+
+IMAGE = MULTIMEDIA_DIRECTORY.replace("gandalf_app", "tool_example_app") + '/arborgreens01.jpg'
 
 
 @ns.route('/')
@@ -35,30 +39,36 @@ class JpegIOResource(Resource):
         parser = reqparse.RequestParser()
         parser.add_argument('uuid')
         parser.add_argument('projectId')
+        parser.add_argument('analysis_uuid')
         args = parser.parse_args()
-        analysisUuid = args['uuid']
+        result_uuid = args['uuid']
+        analysis_uuid = args['analysis_uuid']
         projectId = args['projectId']
 
         def run_tool():
             log.info("Running thread per elaborazione tool")
-            # emula elaborazione tool
-            time.sleep(5)
-            #jpeg = jio.read("/Users/loretto/Downloads/jpegio/tests/images/arborgreens02.jpg")
-            #coef_array = jpeg.coef_arrays[0]
-            #quant_tbl = jpeg.quant_tables[0]
+            print(IMAGE)
+            jpeg = jio.read(IMAGE)
+            coef_array = jpeg.coef_arrays[0]
+            quant_tbl = jpeg.quant_tables[0]
 
-            #print(coef_array)
-            #print(quant_tbl)
-            #
-            # # Modifying jpeg.coef_arrays...
-            # # Modifying jpeg.quant_tables...
-            #
-            # jio.write(jpeg, "image_modified.jpg")
-            # TODO: salva risultati in opportuna directory
+            result = []
+            result.append(coef_array)
+            result.append(quant_tbl)
+            # salva risultati in opportuna directory
+            result_path = MULTIMEDIA_DIRECTORY + '/' + result_uuid
+
+            with open(result_path + '/' + 'result-' + str(analysis_uuid) + '.pkl', 'wb') as output:
+                pickle.dump(result, output, pickle.HIGHEST_PROTOCOL)
+
+            # TODO: rimuovere sleep, serve solo per fare test asincroni e ritardare l'output
+            time.sleep(2)
             print('Invio ping di completamento analisi')
-            gandalf_endpoint = 'http://localhost:8888/api/v1/projects/' + str(projectId) + '/ping?uuid=' + str(analysisUuid)
+            gandalf_endpoint = 'http://localhost:8888/api/v1/projects/' + str(projectId) + '/ping?analysis_uuid=' + str(
+                analysis_uuid)
             requests.post(gandalf_endpoint)
             print('Elaborazione finita!')
+
         try:
             t = threading.Thread(target=run_tool)
             t.daemon = True  # set thread to daemon ('ok' won't be printed in this case)

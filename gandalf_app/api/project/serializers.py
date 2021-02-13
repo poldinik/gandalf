@@ -86,7 +86,7 @@ result_details_response = api.model('ResultDetails', {
     # toolId
     # resultType
     # dataType
-    # data
+    'data': fields.List(fields.Integer())
 })
 
 start_analysis_recepit_response = api.model('StartAnalysisRecepit', {

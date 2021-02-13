@@ -52,6 +52,12 @@ Ricapitolando e facendo riferimento anche ai badge riportati nell'header di ques
 * pip
 * virtualenv
 
+**Dipendenze Linux**
+
+Nel caso si utilizzi una macchina **linux**, verificare la presenza della dipendenza **jq**. Per installarla:
+
+`sudo apt-get install jq`
+
 
 Installazione
 ----------
@@ -69,6 +75,10 @@ gestione delle dipendenze.
 Dev Mode
 ----------
 
+La modalità **dev** è la modalità utilizzata dalla liberia Flask per permettere lo sviluppo dell'applicazione con capacità di 
+**hot reload**, ovvero la ricompilazione automatica del codice dopo modifica. Tale modalità non è idonea per la messa in produzione del codice,
+ma serve solo in fase di sviluppo e per lanciarla sulla propria macchina.
+
 Eseguire:
 
     sh app_serve.sh
@@ -82,6 +92,7 @@ Attraverso il comando
 è possibile lanciare un server che incapsula il tool jpegio. Tale tool è stato utilizzato per implementare un esempio di tool esposto tramite servizio REST con con cui Gandalf può interagire.
 Tramite Gandalf è possibile lanciare un'analisi per un determinato progetto e tramite un endpoint SSE è possibile monitorare lo stato dell'elaborazione, fornendo un sistema di notifica reactive che aumenta
 la user experience.
+Il lancio del server del tool è un'applicazione rest lanciata una modalità `dev`, ovvero un'applicazione separata da **Gandalf**.
 
 Test
 ----------
@@ -108,20 +119,36 @@ Eseguire:
     sh tool_serve.sh
     sh create_mock.sh
     
-I comandi lanceranno rispettivamente il server Gandalf, un server che incapsula un tool di prova e una serie di chiamate per creare dati di mock.
-il comando create_mock.sh termina con il lancio di un'analisi. Collegandosi alla pagina localhost:8888/sse e lanciando poi create_mock.sh è possibile 
-visualizzare la modalità **reactive** dell'applicazione: Gandalf lancia un'analisi chiamando il tool esterno, il quale lancia all'interno di un thread il tool 
-in modo asincrono, non bloccando l'applicazione. Al termine dell'elaborazione, il server del tool chiamerà Gandalf tramite opportuno endpoint per 
-notificare il termine dell'elaborazione. La pagina /sse contiene uno script javascript per una connessione tramite event source, la quale si aggancia ad un 
-endpoint che emette eventi Server Sent. In questo modo Gandalf notificherà in modo asincrono al browser il termine dell'elaborazione senza che l'utente 
-debba necessariamente fare refresh della pagina per monitorare lo stato dell'analisi lanciata in precedenza.
+I comandi lanceranno rispettivamente:
+
+1) il server Gandalf
+2) un server che incapsula un tool di prova
+3) una serie di chiamate per creare dati di prova.
+
+Il comando create_mock.sh termina con il lancio di un'analisi. Collegandosi alla pagina **http://localhost:8888/sse** e lanciando ripetutamente **create_mock.sh** è possibile 
+visualizzare la modalità **reactive** dell'applicazione: Gandalf lancia un'elaborazione che si occupa di lanciare a sua volta N chiamate verso il tool esterno,
+una per ogni coppia tool/probe. Le analisi lanciano all'interno di un thread il tool 
+in modo asincrono, non bloccando l'applicazione. Al termine di ogni analisi, il server del tool chiamerà Gandalf tramite opportuno endpoint per 
+notificare il termine della specifica analisi. 
+
+La pagina /sse contiene uno script javascript per una connessione tramite event source, la quale si aggancia ad un 
+endpoint che emette eventi **Server Sent**. In questo modo Gandalf notificherà in modo asincrono al browser il termine dell'elaborazione senza che l'utente 
+debba necessariamente fare refresh della pagina per monitorare lo stato delle analisi lanciate in precedenza.
+
+Nel sequence diagram è possibile visualizzare l'interazione tra client, Gandalf e tool esterno. Il client invia una richiesta di lancio elaborazione per uno specifico progetto;
+per ogni tool specificato nella richiesta, Gandalf invierà una richiesta di analisi per ogni file probe del progetto. Al termine dell'esecuzione asincrona di ogni analisi, Gandalf riceverà notifica tramite specifici endpoint di callback, alimentando
+uno stream di notifiche server sent verso il Client.
+
+Data un'elaborazione con **T** tool e **P** file di probe, Gandalf invierà così **N = T x P** richieste verso tool esterni, producendo un risultato per ogni elaborazione.
 
 ![SSE](docs/sse.png)
 
 Settings
 ----------
 
-Nel caso ci sia la necessità di **modificare alcune variabili d'ambiente**, come directory dove vengono caricati i file o il dominio su cui gira l'applicazione, modificare il file **gandalf_app/settings.pyt**
+Nel caso ci sia la necessità di **modificare alcune variabili d'ambiente**, come directory dove vengono caricati i file o il dominio su cui gira l'applicazione, modificare il file **gandalf_app/settings.py**
+In particolare la variabile **MULTIMEDIA_DIRECTORY** punta correntemente al progetto stesso. I risultati delle elaborazioni verranno perciò salvati in cartelle con denominazione univoca all'interno del path a cui MULTIMEDIA_DIRECTORY punta.
+Modificare questa variabile (sia nei settings del progetto **gandalf** che nei settings del progetto **tool_example_app**) per modificare il path dove raccogliere i risultati.
 
 Links
 -----

@@ -39,6 +39,7 @@ class Project(db.Model):
     references = db.relationship('UploadedMediaFile', backref='owner_project_of_references')
     additionalData = db.relationship('UploadedDataFile', backref='owner_project')
     results = db.relationship('ResultSummary', backref='owner_project')
+    elaborations = db.relationship('Elaboration', backref='owner_project_of_elaboration')
 
     def __init__(self, name):
         self.name = name
@@ -48,6 +49,7 @@ class Project(db.Model):
         self.references = []
         self.additionalData = []
         self.results = []
+        self.elaborations = []
 
     def __repr__(self):
         return '<Project %r>' % self.name
@@ -64,7 +66,6 @@ class UploadedMediaFile(db.Model):
 
     def __init__(self, fileName):
         self.fileName = fileName
-
 
     def __repr__(self):
         return '<UploadedMediaFile %r>' % self.fileName
@@ -85,6 +86,24 @@ class UploadedDataFile(db.Model):
         return '<UploadedDataFile %r>' % self.fileName
 
 
+class Elaboration(db.Model):
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    number_of_tools = db.Column(db.Integer())
+    project_id = db.Column(db.Integer, db.ForeignKey('project.id'))
+    completed_tool_elaborations = db.Column(db.Integer)
+    analysis_uuid_list = db.Column(db.PickleType())
+    status = db.Column(db.String())
+    uuid = db.Column(db.String)
+
+    def __init__(self):
+        self.completed_tool_elaborations = 0
+        self.analysis_uuid_list = []
+        self.status = 'RUNNING'
+
+    def __repr__(self):
+        return '<Elaboration %r>' % self.number_of_tools
+
+
 class ResultSummary(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     location = db.Column(db.String())
@@ -92,7 +111,29 @@ class ResultSummary(db.Model):
     toolId = db.Column(db.Integer())
     name = db.Column(db.String())
     resultType = db.Column(db.Enum(ResultType))
+    results_uuid_list = db.Column(db.PickleType())
+    folder_result_uuid = db.Column(db.String())
     project_id = db.Column(db.Integer, db.ForeignKey('project.id'))
+
+    def __init__(self, name):
+        self.name = name
+        self.probes = []
+        self.results_uuid_list = []
+
+    def __repr__(self):
+        return '<ResultSummary %r>' % self.name
+
+
+class ResultDetails(db.Model):
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    location = db.Column(db.String())
+    probes = db.Column(db.PickleType())
+    toolId = db.Column(db.Integer())
+    name = db.Column(db.String())
+    resultType = db.Column(db.Enum(ResultType))
+    project_id = db.Column(db.Integer, db.ForeignKey('project.id'))
+    dataType = db.Column(db.String, db.ForeignKey('project.id'))
+    data = db.Column(db.PickleType())
 
     def __init__(self, name):
         self.name = name
@@ -131,16 +172,18 @@ class Tool(db.Model):
 class Analysis(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     uuid = db.Column(db.String())
+    result_uuid = db.Column(db.String())
     status = db.Column(db.String())
     tools = db.Column(db.Integer())
     completed_tools = db.Column(db.Integer())
+    elaboration_uuid = db.Column(db.Integer())
     project_id = db.Column(db.Integer, db.ForeignKey('project.id'))
 
     def __init__(self):
         self.status = 'RUNNING'
         self.tools = 0
         self.completed_tools = 0
-        pass
+
 
     def __repr__(self):
         return '<Analysis %r>' % self.name
