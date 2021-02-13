@@ -1,6 +1,6 @@
 from gandalf_app.database import db
 from gandalf_app import settings
-from gandalf_app.database.models import Project, UploadedMediaFile, UploadedDataFile, Tool, Analysis, Elaboration
+from gandalf_app.database.models import Project, UploadedMediaFile, UploadedDataFile, Tool, Analysis, Elaboration, ResultSummary
 
 
 def save(project):
@@ -38,8 +38,12 @@ def get_all():
     return Project.query.all()
 
 
-def get_by_id(projectId):
+def get_project_by_id(projectId):
     return Project.query.filter_by(id=projectId).first()
+
+
+def get_result_by_id(resultId):
+    return ResultSummary.query.filter_by(id=resultId).first()
 
 
 def get_tool_by_id(toolId):

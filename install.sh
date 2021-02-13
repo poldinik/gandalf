@@ -14,6 +14,7 @@ function install() {
   _out virtualenv activate...
   source venv/bin/activate
   pip install -r requirements.txt
+  git clone https://github.com/dwgoon/jpegio.git
   cd jpegio
   python setup.py install
   rm -rf tests #elimina la cartella test del tool jpegio per conflitto nel lancio di test.sh

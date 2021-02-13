@@ -23,7 +23,9 @@ logging.config.fileConfig(logging_conf_path)
 log = logging.getLogger(__name__)
 
 ns = api.namespace('jpegio', description='Jpeg IO tool')
-IMAGE = "/Users/loretto/Downloads/jpegio/tests/images/arborgreens02.jpg"
+
+IMAGE = MULTIMEDIA_DIRECTORY.replace("gandalf_app", "tool_example_app") + '/arborgreens01.jpg'
+
 
 @ns.route('/')
 class JpegIOResource(Resource):
@@ -45,6 +47,7 @@ class JpegIOResource(Resource):
 
         def run_tool():
             log.info("Running thread per elaborazione tool")
+            print(IMAGE)
             jpeg = jio.read(IMAGE)
             coef_array = jpeg.coef_arrays[0]
             quant_tbl = jpeg.quant_tables[0]
@@ -55,14 +58,17 @@ class JpegIOResource(Resource):
             # salva risultati in opportuna directory
             result_path = MULTIMEDIA_DIRECTORY + '/' + result_uuid
 
-            with open(result_path + '/' + 'result-' + str(uuid.uuid4()) + '.pkl', 'wb') as output:
+            with open(result_path + '/' + 'result-' + str(analysis_uuid) + '.pkl', 'wb') as output:
                 pickle.dump(result, output, pickle.HIGHEST_PROTOCOL)
 
-            time.sleep(5)
+            # TODO: rimuovere sleep, serve solo per fare test asincroni e ritardare l'output
+            time.sleep(2)
             print('Invio ping di completamento analisi')
-            gandalf_endpoint = 'http://localhost:8888/api/v1/projects/' + str(projectId) + '/ping?analysis_uuid=' + str(analysis_uuid)
+            gandalf_endpoint = 'http://localhost:8888/api/v1/projects/' + str(projectId) + '/ping?analysis_uuid=' + str(
+                analysis_uuid)
             requests.post(gandalf_endpoint)
             print('Elaborazione finita!')
+
         try:
             t = threading.Thread(target=run_tool)
             t.daemon = True  # set thread to daemon ('ok' won't be printed in this case)

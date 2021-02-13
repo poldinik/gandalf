@@ -111,11 +111,14 @@ class ResultSummary(db.Model):
     toolId = db.Column(db.Integer())
     name = db.Column(db.String())
     resultType = db.Column(db.Enum(ResultType))
+    results_uuid_list = db.Column(db.PickleType())
+    folder_result_uuid = db.Column(db.String())
     project_id = db.Column(db.Integer, db.ForeignKey('project.id'))
 
     def __init__(self, name):
         self.name = name
         self.probes = []
+        self.results_uuid_list = []
 
     def __repr__(self):
         return '<ResultSummary %r>' % self.name

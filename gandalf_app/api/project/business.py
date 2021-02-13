@@ -1,8 +1,8 @@
 from gandalf_app.database.models import Project, UploadedMediaFile, UploadedDataFile, Analysis, ResultDetails, \
     ResultSummary, Elaboration
-from gandalf_app.api.project.dao import save, get_all, get_by_id, saveMediaFile, saveDataFile, deleteProject, \
+from gandalf_app.api.project.dao import save, get_all, get_project_by_id, saveMediaFile, saveDataFile, deleteProject, \
     get_media_by_id, removeMediaFromProject, get_data_by_id, removeDataFromProject, get_tool_by_id, saveAnalysis, \
-    get_analysis_by_uuid, saveResultSummary, saveElaboration, get_elaboration_by_uuid
+    get_analysis_by_uuid, saveResultSummary, saveElaboration, get_elaboration_by_uuid, get_result_by_id
 # from gandalf_app import settings
 from gandalf_app.settings import MULTIMEDIA_DIRECTORY
 import hashlib
@@ -42,11 +42,11 @@ def get_projects():
 
 
 def get_project(projectId):
-    return get_by_id(projectId)
+    return get_project_by_id(projectId)
 
 
 def add_media_to_project(projectId, filename, role):
-    project = get_by_id(projectId)
+    project = get_project_by_id(projectId)
     uploadedMediaFile = UploadedMediaFile(filename)
     uploadedMediaFile.fileName = filename
     uploadedMediaFile.role = role
@@ -63,7 +63,7 @@ def add_media_to_project(projectId, filename, role):
 
 
 def add_data_to_project(projectId, filename, dataType):
-    project = get_by_id(projectId)
+    project = get_project_by_id(projectId)
     uploadedDataFile = UploadedDataFile(filename)
     uploadedDataFile.fileName = filename
     uploadedDataFile.dataType = dataType
@@ -82,19 +82,19 @@ def delete_project(projectId):
 
 
 def deleteMediaForProject(projectId, mediaId):
-    project = get_by_id(projectId)
+    project = get_project_by_id(projectId)
     media = get_media_by_id(mediaId)
     removeMediaFromProject(project, media)
 
 
 def deleteDataForProject(projectId, dataId):
-    project = get_by_id(projectId)
+    project = get_project_by_id(projectId)
     data = get_data_by_id(dataId)
     removeDataFromProject(project, data)
 
 
 def startAnalysis(projectId, toolId, result_uuid, result_path, tools, elaboration_uuid):
-    project = get_by_id(projectId)
+    project = get_project_by_id(projectId)
     tool = get_tool_by_id(toolId)
 
     tool_endpoint = tool.endpoint
@@ -131,14 +131,15 @@ def startAnalysis(projectId, toolId, result_uuid, result_path, tools, elaboratio
 def create_result_scaffold(projectId, toolIds, result_uuid, result_path):
     elaboration = Elaboration()
     elaboration.number_of_tools = len(toolIds)
-    elaboration_uuid = str(uuid.uuid4())
+    elaboration_uuid = result_uuid
     elaboration.uuid = elaboration_uuid
+    elaboration.project_id = projectId
 
     uuid_list = []
     for i in toolIds:
         toolId = int(i)
         analysis_uuid = startAnalysis(projectId, toolId, result_uuid, result_path, len(toolIds), elaboration_uuid)
-        #print("É stata lanciata l'analisi " + analysis_uuid)
+        # print("É stata lanciata l'analisi " + analysis_uuid)
         uuid_list.append(analysis_uuid)
         elaboration.analysis_uuid_list.append(analysis_uuid)
 
@@ -157,8 +158,15 @@ def update_elaboration(analysisUuid):
     if completed_tool_elaborations == elaboration.number_of_tools:
         elaboration.status = 'COMPLETED'
         elaboration.completed_tool_elaborations = completed_tool_elaborations
-        project_id = elaboration.project_id
-        # resultSummary = ResultSummary(name='Risultati del progetto ' + str(project_id))
+        resultSummary = ResultSummary(name='Risultati di elaborazione ' + str(elaboration.uuid))
+        resultSummary.results_uuid_list = elaboration.analysis_uuid_list
+        resultSummary.project_id = elaboration.project_id
+        resultSummary.folder_result_uuid = elaboration.uuid
+        created = saveResultSummary(resultSummary)
+        print("Project Id: " + str(elaboration.project_id))
+        project = get_project_by_id(elaboration.project_id)
+        project.results.append(created)
+        save(project)
 
     saveAnalysis(analysis)
     updated = saveElaboration(elaboration)
@@ -171,19 +179,22 @@ def get_project_with_analysis_with_uuid(analysisUuid):
 
 
 def get_result(projectId, resultId):
-    project = get_by_id(projectId)
+    resultSummary = get_result_by_id(resultId)
 
-    resultDetails = ResultDetails('risultatoTest')
+    analysis_uuid_list = resultSummary.results_uuid_list
+    print(analysis_uuid_list)
+    result_uuid = resultSummary.folder_result_uuid
+    dataList = []
+    result_dir = MULTIMEDIA_DIRECTORY + '/' + result_uuid
 
-    with open(
-            '/Users/loretto/PycharmProjects/gandalf/gandalf_app/c486077a-532a-432c-a01d-1c252d75a289/1/result-2204a851-5f00-41ee-bf63-b09d67208d43.pkl',
-            'rb') as input:
-        data = pickle.load(input)
+    for analysis_uuid in analysis_uuid_list:
+        data_path = result_dir + '/result-' + analysis_uuid + '.pkl'
+        print(data_path)
+        with open(result_dir + '/result-' + analysis_uuid + '.pkl', 'rb') as input:
+            data = pickle.load(input)
+            if len(data) > 0:
+                [dataList.append(d.tolist()) for d in data]
 
-    if len(data) > 0:
-        dataList = [d.tolist() for d in data]
-    else:
-        dataList = []
 
     # resultDetails.data = dataList[0]
 
@@ -197,14 +208,10 @@ def get_result(projectId, resultId):
     # dataType = db.Column(db.String, db.ForeignKey('project.id'))
     # probes = pickle.load(project.probes)
 
+    project = get_project_by_id(projectId)
     resource_fields = {'probes': fields.List(fields.String()), 'name': fields.String}
 
     des = json.loads(json.dumps(marshal(project, resource_fields)))
-
-    if des['probes'] is None:
-        probes = []
-    else:
-        probes = des['probes']
 
     # https://lesc.dinfo.unifi.it/gandalf/api/v1/projects/123/results/120
     location = settings.HTTP_PROTOCOL + '://' + settings.FLASK_SERVER_NAME + '/gandalf/api/v' + str(
@@ -219,10 +226,9 @@ def get_result(projectId, resultId):
     return {
         'id': resultId,
         'location': location,
-        'probes': probes,
         'toolId': 1,
         'name': name,
         'resultType': 'MULTI',
         'dataType': 'matrix',
-        # 'data': dataList
+        'data': dataList
     }

@@ -166,7 +166,6 @@ class AnalysisListenForProjectResource(Resource):
         """
         SSE reactive verso il client per stato elaborazione di ogni analisi lanciata. É stream di analysis uuid.
         """
-
         def stream():
             messages = announcer.listen()  # ritorna un queue.Queue
             while True:
