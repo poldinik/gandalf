@@ -119,13 +119,25 @@ Eseguire:
     sh tool_serve.sh
     sh create_mock.sh
     
-I comandi lanceranno rispettivamente il server Gandalf, un server che incapsula un tool di prova e una serie di chiamate per creare dati di mock.
-il comando create_mock.sh termina con il lancio di un'analisi. Collegandosi alla pagina localhost:8888/sse e lanciando poi create_mock.sh è possibile 
-visualizzare la modalità **reactive** dell'applicazione: Gandalf lancia un'analisi chiamando il tool esterno, il quale lancia all'interno di un thread il tool 
-in modo asincrono, non bloccando l'applicazione. Al termine dell'elaborazione, il server del tool chiamerà Gandalf tramite opportuno endpoint per 
-notificare il termine dell'elaborazione. La pagina /sse contiene uno script javascript per una connessione tramite event source, la quale si aggancia ad un 
-endpoint che emette eventi Server Sent. In questo modo Gandalf notificherà in modo asincrono al browser il termine dell'elaborazione senza che l'utente 
-debba necessariamente fare refresh della pagina per monitorare lo stato dell'analisi lanciata in precedenza.
+I comandi lanceranno rispettivamente:
+
+1) il server Gandalf
+2) un server che incapsula un tool di prova
+3) una serie di chiamate per creare dati di prova.
+
+Il comando create_mock.sh termina con il lancio di un'analisi. Collegandosi alla pagina **http://localhost:8888/sse** e lanciando ripetutamente **create_mock.sh** è possibile 
+visualizzare la modalità **reactive** dell'applicazione: Gandalf lancia un'elaborazione che si occupa di lanciare a sua volta N chiamate verso il tool esterno,
+una per ogni coppia tool/probe. Le analisi lanciano all'interno di un thread il tool 
+in modo asincrono, non bloccando l'applicazione. Al termine di ogni analisi, il server del tool chiamerà Gandalf tramite opportuno endpoint per 
+notificare il termine della specifica analisi. 
+
+La pagina /sse contiene uno script javascript per una connessione tramite event source, la quale si aggancia ad un 
+endpoint che emette eventi **Server Sent**. In questo modo Gandalf notificherà in modo asincrono al browser il termine dell'elaborazione senza che l'utente 
+debba necessariamente fare refresh della pagina per monitorare lo stato delle analisi lanciate in precedenza.
+
+Nel sequence diagram è possibile visualizzare l'interazione tra client, Gandalf e tool esterno. Il client invia una richiesta di lancio elaborazione per uno specifico progetto;
+Per ogni toolId specificato nella richiesta, Gandalf invierà una richiesta di analisi per ogni file probe del progetto. AL termine dell'esecuzione asincrona di ogni analisi, Gandalf riceverà notifica tramite specifici endpoint di callback, alimentando
+uno stream di notifiche server sent verso il Client.
 
 ![SSE](docs/sse.png)
 
