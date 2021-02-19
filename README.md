@@ -64,7 +64,7 @@ Installazione
 
 Per installare le dipendenze necessarie per poter eseguire il progetto, tramite terminale spostarsi nella root directory del progetto ed eseguire:
 
-    sh install.sh
+    bash install.sh
     
 Questo script avvia una pipeline per l'installazione in sequenza di: un **python virtualenv**, attivazione virtualenv e installazione requirements.
 La scelta di utilizzare un **virtualenv** permette di installare interprete python  e dipendenze localmente senza interferire con le dipendenze globali eventualmente già presenti
@@ -81,13 +81,13 @@ ma serve solo in fase di sviluppo e per lanciarla sulla propria macchina.
 
 Eseguire:
 
-    sh app_serve.sh
+    bash app_serve.sh
     
 Lo script avvierà l'applicazione in modalità sviluppo, rendendola disponibile sotto dominio `localhost:8888`. Tramite la url `localhost:8888/api/v1` è possibile visualizzare la pagina che raccoglie la documentazione OpenAPI generata.
 
 Attraverso il comando
 
-    sh tool_serve.sh
+    bash tool_serve.sh
     
 è possibile lanciare un server che incapsula il tool jpegio. Tale tool è stato utilizzato per implementare un esempio di tool esposto tramite servizio REST con con cui Gandalf può interagire.
 Tramite Gandalf è possibile lanciare un'analisi per un determinato progetto e tramite un endpoint SSE è possibile monitorare lo stato dell'elaborazione, fornendo un sistema di notifica reactive che aumenta

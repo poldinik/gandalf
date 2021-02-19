@@ -16,7 +16,9 @@ SQLALCHEMY_TRACK_MODIFICATIONS = False
 
 # DIRECTORY per Multimedia caricati
 # MULTIMEDIA_DIRECTORY = '/Users/loretto/Desktop/'
-MULTIMEDIA_DIRECTORY = os.path.dirname(os.path.realpath(__file__))
+#MULTIMEDIA_DIRECTORY = os.path.dirname(os.path.realpath(__file__))
+MULTIMEDIA_DIRECTORY = os.path.join(os.path.dirname(os.path.realpath(__file__)), "Results")
+
 
 # API version
 API_VERSION = 1
